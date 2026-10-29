@@ -1,25 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
-import { SITE } from "../config";
+import { FEATURED_BRAND } from "../data/brands";
 
-// Visitors land here after the plain HTML form (no JavaScript) was accepted by Formgong.
 const steps = [
-  "The office reads your request and checks which plumber is nearest.",
-  "We call or email within an hour during opening hours, with a price range or a time to visit.",
-  "On the visit, you agree the written price before any work starts.",
+  "我们的技术评测团队将阅读您提交的宽带运营商、设备环境与月度预算需求。",
+  "我们将通过邮件为您推荐匹配的「主力 IEPL 专线 + 备用不限时流量包」组合方案及对应客户端教程。",
+  "在等待邮件回复期间，您可以直接浏览全站 42 家机场实测档案或先体验榜首 #1 光速云。",
 ];
 ---
 
-<BaseLayout title="Thank you" description="Your request has been received." noindex>
+<BaseLayout title="选型咨询已收到" description="您的订阅选型与排障请求已成功提交。" noindex>
   <section class="relative overflow-x-clip">
     <div class="container-x py-20 sm:py-28">
       <div class="mx-auto max-w-2xl text-center">
         <span class="mx-auto grid size-20 place-items-center rounded-full bg-success/12 text-success">
           <Icon name="check" size={40} />
         </span>
-        <h1 class="h-display mt-8 text-[clamp(2.25rem,1.6rem+2.8vw,3.5rem)]">We have <span class="hl">your request</span></h1>
-        <p class="lead mt-6">What happens next:</p>
+        <h1 class="h-display mt-8 text-[clamp(2.25rem,1.6rem+2.8vw,3.5rem)]">我们已收到 <span class="hl">您的咨询请求</span></h1>
+        <p class="lead mt-6">接下来的处理流程：</p>
       </div>
       <ol class="stagger mx-auto mt-12 grid max-w-2xl gap-4">
         {
@@ -32,9 +31,9 @@ const steps = [
         }
       </ol>
       <div class="mx-auto mt-12 flex max-w-2xl flex-col justify-center gap-3 sm:flex-row">
-        <a href="/" class="btn btn-secondary btn-lg">Back to the home page</a>
-        <a href={`tel:${SITE.emergencyPhone.tel}`} class="btn btn-primary btn-lg">
-          <Icon name="bolt" /> Emergency? {SITE.emergencyPhone.display}
+        <a href="/" class="btn btn-secondary btn-lg">返回首页总榜</a>
+        <a href={`/brands/${FEATURED_BRAND.slug}/`} class="btn btn-primary btn-lg">
+          <Icon name="bolt" /> 查看 #1 {FEATURED_BRAND.name}实测
         </a>
       </div>
     </div>

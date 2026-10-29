@@ -332,12 +332,12 @@
   fill: #3c4657;
 }
 .sc-t-van {
-  font-size: 12px;
+  font-size: 9px;
   font-weight: 800;
   fill: #0f1a2a;
 }
 .sc-t-chip {
-  font-size: 14.5px;
+  font-size: 13px;
   font-weight: 700;
 }
 .sc-t-label {
@@ -351,7 +351,7 @@
   letter-spacing: -0.02em;
 }
 .sc-t-badge {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   fill: var(--accent);
 }
@@ -486,7 +486,7 @@
       font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
       font-weight: 760;
       letter-spacing: -0.03em;
-      line-height: 1.12;
+      line-height: 1.26;
     }
     .chapter-body {
       max-width: 32rem;
@@ -598,7 +598,8 @@
         justify-content: center;
       }
       .chapter-title {
-        font-size: clamp(2rem, 0.9rem + 2.4vw, 3.25rem);
+        font-size: clamp(1.65rem, 1rem + 1.8vw, 2.45rem);
+        line-height: 1.26;
       }
       .chapter-body {
         max-width: 30rem;

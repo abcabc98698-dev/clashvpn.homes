@@ -1,7 +1,7 @@
 ---
 import fontUrl from "@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2?url";
 import { SITE } from "../config";
-import { jsonLdString, localBusinessJsonLd } from "../lib/schema";
+import { breadcrumbJsonLd, jsonLdString, localBusinessJsonLd, type CrumbItem } from "../lib/schema";
 
 export interface Props {
   /** Page title without the site name. Leave out on the home page. */
@@ -9,30 +9,88 @@ export interface Props {
   description?: string;
   /** Path or absolute URL of a 1200×630 image. */
   image?: string;
+  /** Alias for cover image on article pages. */
+  cover?: string;
+  /** Open Graph content type ("website" or "article"). */
+  ogType?: "website" | "article";
+  /** ISO date string for article publication time. */
+  publishedTime?: string;
+  /** ISO date string for last modified time. */
+  modifiedTime?: string;
+  /** Alias for modifiedTime on article pages. */
+  updatedDate?: string;
+  /** Author name for article pages. */
+  author?: string;
+  /** Primary category / section for article pages. */
+  category?: string;
+  /** Topic tags for article pages. */
+  tags?: string[];
   noindex?: boolean;
+  /** When noindex is true, allow crawlers to follow internal links on the page. */
+  followLinks?: boolean;
+  /** Optional breadcrumb trail for structured data. */
+  crumbs?: CrumbItem[];
+  /** Additional JSON-LD schema objects for Article, FAQPage, ItemList, etc. */
+  extraJsonLd?: unknown[];
 }
 
-const { title, description = SITE.description, image = "/og.png", noindex = false } = Astro.props;
-const site = Astro.site ?? Astro.url;
-const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${SITE.tagline}`;
-const canonical = new URL(Astro.url.pathname, site).href;
-const ogImage = new URL(image, site).href;
+const {
+  title,
+  description = SITE.description,
+  image,
+  cover,
+  ogType,
+  publishedTime,
+  modifiedTime,
+  updatedDate,
+  author,
+  category,
+  tags = [],
+  noindex = false,
+  followLinks = false,
+  crumbs = [],
+  extraJsonLd = [],
+} = Astro.props;
+const site = Astro.site ?? new URL(SITE.url);
+const rawPath = Astro.url.pathname;
+const normalizedPath = rawPath.endsWith("/") || rawPath.includes(".") ? rawPath : `${rawPath}/`;
+const siteSuffix = title && title.length > 32 ? SITE.shortName : SITE.name;
+const fullTitle = title ? `${title} | ${siteSuffix}` : `${SITE.name} | ${SITE.tagline}`;
+const canonical = new URL(normalizedPath, site).href;
+const resolvedImage = cover ?? image ?? "/og.png";
+const ogImage = new URL(resolvedImage, site).href;
+const resolvedOgType = ogType ?? (publishedTime ? "article" : "website");
+const resolvedModified = modifiedTime ?? updatedDate;
+const robotsContent = noindex
+  ? followLinks
+    ? "noindex, follow"
+    : "noindex, nofollow"
+  : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="applicable-device" content="pc,mobile" />
+<meta name="format-detection" content="telephone=no" />
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
+<meta name="robots" content={robotsContent} />
+{author && <meta name="author" content={author} />}
+{SITE.verification.google && <meta name="google-site-verification" content={SITE.verification.google} />}
+{SITE.verification.bing && <meta name="msvalidate.01" content={SITE.verification.bing} />}
+{SITE.verification.shenma && <meta name="shenma-site-verification" content={SITE.verification.shenma} />}
+{SITE.verification.baidu && <meta name="baidu-site-verification" content={SITE.verification.baidu} />}
 <link rel="canonical" href={canonical} />
-{noindex && <meta name="robots" content="noindex" />}
-<meta name="generator" content={Astro.generator} />
+<link rel="alternate" hreflang={SITE.lang} href={canonical} />
+<link rel="alternate" hreflang="x-default" href={canonical} />
 <meta name="theme-color" content="#0b0e1c" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={resolvedOgType} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:locale" content={SITE.locale} />
 <meta property="og:title" content={fullTitle} />
@@ -42,9 +100,24 @@ const ogImage = new URL(image, site).href;
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={`${SITE.name}: ${SITE.tagline}`} />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{resolvedModified && <meta property="article:modified_time" content={resolvedModified} />}
+{author && <meta property="article:author" content={author} />}
+{category && <meta property="article:section" content={category} />}
+{tags.map((tag) => <meta property="article:tag" content={tag} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 
 <script type="application/ld+json" set:html={jsonLdString(localBusinessJsonLd(site))} />
+{
+  crumbs.length > 0 && (
+    <script type="application/ld+json" set:html={jsonLdString(breadcrumbJsonLd(site, normalizedPath, crumbs))} />
+  )
+}
+{
+  extraJsonLd.map((schemaObj) => (
+    <script type="application/ld+json" set:html={jsonLdString(schemaObj)} />
+  ))
+}

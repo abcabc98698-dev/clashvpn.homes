@@ -1,43 +1,195 @@
 import { SITE } from "../config";
 
-const DAY_NAMES = { Mo: "Monday", Tu: "Tuesday", We: "Wednesday", Th: "Thursday", Fr: "Friday", Sa: "Saturday", Su: "Sunday" } as const;
+export interface CrumbItem {
+  label: string;
+  href?: string;
+}
 
 /**
- * schema.org LocalBusiness (or a subtype such as Plumber) built from src/config.ts.
- * No aggregateRating on purpose: search engines ignore self-published ratings and may treat them as spam.
+ * schema.org Organization & WebSite built from src/config.ts.
  */
 export function localBusinessJsonLd(site: URL) {
-  const { address } = SITE;
+  const orgId = new URL("/#organization", site).href;
+  const siteUrl = new URL("/", site).href;
   return {
     "@context": "https://schema.org",
-    "@type": SITE.schemaType,
-    "@id": new URL("/#business", site).href,
-    name: SITE.name,
-    description: SITE.description,
-    url: new URL("/", site).href,
-    telephone: SITE.phone.tel,
-    email: SITE.email,
-    image: new URL("/og.png", site).href,
-    priceRange: SITE.priceRange,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: address.street,
-      addressLocality: address.city,
-      addressRegion: address.region,
-      postalCode: address.postalCode,
-      addressCountry: address.country,
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": orgId,
+        name: SITE.name,
+        alternateName: SITE.shortName,
+        description: SITE.description,
+        url: siteUrl,
+        email: SITE.email,
+        logo: {
+          "@type": "ImageObject",
+          url: new URL("/favicon.svg", site).href,
+        },
+        image: new URL("/og.png", site).href,
+      },
+      {
+        "@type": "WebSite",
+        "@id": new URL("/#website", site).href,
+        url: siteUrl,
+        name: SITE.name,
+        description: SITE.tagline,
+        inLanguage: SITE.lang,
+        publisher: {
+          "@id": orgId,
+        },
+      },
+    ],
+  };
+}
+
+/**
+ * schema.org BreadcrumbList built from page breadcrumb items.
+ */
+export function breadcrumbJsonLd(site: URL, currentPath: string, crumbs: CrumbItem[]) {
+  const items = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "首页",
+      item: new URL("/", site).href,
     },
-    areaServed: SITE.serviceAreas.map((name) => ({ "@type": "City", name })),
-    openingHoursSpecification: SITE.hours
-      .filter((h) => h.opens && h.closes)
-      .map((h) => ({
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: h.days.map((d) => `https://schema.org/${DAY_NAMES[d]}`),
-        opens: h.opens,
-        closes: h.closes,
-      })),
-    // Only real profile URLs belong here; the demo's root-domain placeholders are skipped.
-    sameAs: SITE.social.map((s) => s.href).filter((href) => new URL(href).pathname.length > 1),
+    ...crumbs.map((c, index) => ({
+      "@type": "ListItem",
+      position: index + 2,
+      name: c.label,
+      item: new URL(c.href ?? currentPath, site).href,
+    })),
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items,
+  };
+}
+
+export function faqPageJsonLd(questions: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: questions.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+}
+
+export function itemListJsonLd(
+  site: URL,
+  name: string,
+  items: { rank: number; name: string; urlPath: string; description: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    itemListElement: items.map((item) => ({
+      "@type": "ListItem",
+      position: item.rank,
+      name: item.name,
+      description: item.description,
+      url: new URL(item.urlPath, site).href,
+    })),
+  };
+}
+
+export function collectionPageJsonLd(
+  site: URL,
+  opts: {
+    name: string;
+    description: string;
+    urlPath: string;
+  }
+) {
+  const pageUrl = new URL(opts.urlPath, site).href;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${pageUrl}#collection`,
+    name: opts.name,
+    description: opts.description,
+    url: pageUrl,
+    inLanguage: SITE.lang,
+    isPartOf: {
+      "@id": new URL("/#website", site).href,
+    },
+  };
+}
+
+export function webPageJsonLd(
+  site: URL,
+  opts: {
+    name: string;
+    description: string;
+    urlPath: string;
+    type?: "WebPage" | "AboutPage";
+  }
+) {
+  const pageUrl = new URL(opts.urlPath, site).href;
+  return {
+    "@context": "https://schema.org",
+    "@type": opts.type ?? "WebPage",
+    "@id": `${pageUrl}#webpage`,
+    name: opts.name,
+    description: opts.description,
+    url: pageUrl,
+    inLanguage: SITE.lang,
+    isPartOf: {
+      "@id": new URL("/#website", site).href,
+    },
+  };
+}
+
+export function articleJsonLd(
+  site: URL,
+  opts: {
+    headline: string;
+    description: string;
+    urlPath: string;
+    imagePath?: string;
+    datePublished: string;
+    dateModified: string;
+  }
+) {
+  const pageUrl = new URL(opts.urlPath, site).href;
+  return {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: opts.headline,
+    description: opts.description,
+    url: pageUrl,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": pageUrl,
+    },
+    image: new URL(opts.imagePath || "/og.png", site).href,
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified,
+    author: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: new URL("/", site).href,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+      logo: {
+        "@type": "ImageObject",
+        url: new URL("/favicon.svg", site).href,
+      },
+    },
   };
 }
 

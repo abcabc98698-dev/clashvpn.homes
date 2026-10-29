@@ -1,6 +1,6 @@
 /**
- * Inline icon set drawn for Craftline on a 24×24 grid (stroke icons, 1.75px).
- * No icon font and no third-party icon license: add your own by appending markup here.
+ * Inline vector icon set on a 24×24 grid (stroke icons, 1.75px).
+ * Zero external icon fonts or third-party icon requests.
  */
 export const ICONS = {
   "arrow-right": '<path d="M5 12h14M13 6l6 6-6 6"/>',

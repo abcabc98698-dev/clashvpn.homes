@@ -1,38 +1,38 @@
 [
   {
-    "id": "call-out",
+    "id": "top-pick-2026",
     "order": 1,
-    "question": "What does the call-out fee cover?",
-    "answer": "The $129 call-out covers travel and up to 30 minutes of diagnosis. If you go ahead with the repair, we take it off the bill. If you don't, that's all you pay."
+    "question": "2026年综合稳定性、测速表现与性价比，最推荐哪一家机场订阅？",
+    "answer": "综合本站在 2026-08-11 对 16 家核心品牌的原始测速实测与全库 42 家价格横向对比，首选推荐排名第 1 的「光速云（GuangsuYun）」。它采用双 IEPL 专线与高速隧道架构，实测香港节点峰值达 685.56Mbps、日本 572.32Mbps，同时提供免配置自研客户端与 Clash/小火箭通用订阅。使用专属 8 折优惠码 AMM 后，特惠年付仅需 ¥99/年（折合 ¥8.25/月，99GB/月），还提供 ¥147 永久 247GB 不限时流量包。若追求全节点 IEPL 且完全不限设备数，「#2 肥猫云」（年付 ¥96 起）也是极佳的主力选择。"
   },
   {
-    "id": "fixed-price",
+    "id": "iepl-vs-bgp",
     "order": 2,
-    "question": "What's included in a fixed price?",
-    "answer": "Labor, standard parts such as fittings, valves and pipe, and cleaning up afterwards. It doesn't cover damage we couldn't see before opening a wall or floor. If we find any, we stop, show you, and price it separately before carrying on."
+    "question": "IEPL / IPLC 专线机场和普通中转/直连机场有什么本质区别？",
+    "answer": "普通直连或公网中转机场的数据包需要经过三大运营商拥堵的公网国际出口，晚高峰（20:00–23:00）容易受到国际出口 QoS 限速或防火墙策略干扰，表现为延迟飙升、丢包断流。而 IEPL/IPLC 专线机场通过国内多线 BGP 入口收流后，走运营商内网点对点物理专线直接过境至香港、日本或美西机房，绕过公网拥塞瓶颈，因此在晚高峰和特殊时期依然能保持 20–45ms 的低延迟与高可用性。"
   },
   {
-    "id": "emergency",
+    "id": "chatgpt-claude-unlock",
     "order": 3,
-    "question": "How fast can you get here in an emergency?",
-    "answer": "Usually within 60 minutes inside our service area, at any hour. Call the emergency line rather than using the form, so the dispatcher can talk you through shutting the water off while the van drives over."
+    "question": "为什么连上节点后能打开 Google，但 ChatGPT 或 Claude 提示 Access Denied？",
+    "answer": "主要有两个原因：第一，OpenAI（ChatGPT）、Anthropic（Claude）与 Google Gemini 官方均不支持中国香港与中国澳门地区访问，如果您选择了香港节点就会被直接拦截，请在客户端将 AI 分流策略组切换至美国、日本、新加坡或台湾节点；第二，廉价公网节点的出口 IP 被过多用户共用触发了 Cloudflare 风控，建议选择 #1 光速云、#2 肥猫云等提供纯净原生/流媒体解锁落地的专线机场。"
   },
   {
-    "id": "guarantee",
+    "id": "client-choice",
     "order": 4,
-    "question": "What does the two-year guarantee cover?",
-    "answer": "Our labor on the repair we did. If a joint we made leaks or a fixture we fitted comes loose within two years, we come back and fix it at no charge. Parts carry the manufacturer's warranty, usually one to ten years."
+    "question": "Windows、Mac、安卓和苹果 iOS 手机分别推荐用什么代理客户端？",
+    "answer": "如果您是零基础新手，选择带有自研一键客户端的机场（如光速云、微风）直接输入账号密码即可使用。若使用通用订阅链接：Windows 与 macOS 电脑首选免费开源的 Clash Verge Rev、Mihomo Party 或 FlClash（Mac 需注意区分 M系列芯片 arm64 与 Intel 芯片 x64）；Android 手机首选 Clash Meta for Android (CMFA)、FlClash 或 v2rayNG；iPhone/iPad 需使用非国区 Apple ID 在 App Store 下载 Shadowrocket（小火箭）、Stash 或 Quantumult X。"
   },
   {
-    "id": "licensed",
+    "id": "data-status-meaning",
     "order": 5,
-    "question": "Are your plumbers licensed and insured?",
-    "answer": "Every plumber holds a state license and we carry $2 million in liability insurance. We can email the certificate before the visit if your landlord or building manager needs it."
+    "question": "网站上的「2026-08-11 实测数据」「品牌资料显示」和「待核实」分别代表什么？",
+    "answer": "为确保评测客观透明，本站严格区分四类数据标签：1）「Measured Data · 2026-08-11 实测归档」代表本站留存有原始未裁剪的测速截图与时间戳记录（共 16 家核心品牌）；2）「Vendor Data · 品牌资料显示」代表套餐价格、流媒体/AI 解锁范围及线路架构整理自服务商公开面板或历史档案；3）「Historical Archive · 历史实测归档」代表早期（排名 #29–#42）归档品牌的存量记录；4）「Pending Verification · 待核实」代表当前缺乏独立验证依据的字段，本站绝不凭空编造数据。"
   },
   {
-    "id": "payment",
+    "id": "avoid-runaway-risk",
     "order": 6,
-    "question": "When and how do I pay?",
-    "answer": "By card or bank transfer once the job is finished and tested. For bathroom refits over $1,500 we take a 30% deposit for materials, with the rest due on completion."
+    "question": "购买机场订阅有哪些防跑路和防失联的避坑原则？",
+    "answer": "建议遵循三条铁律：1）新接触一家机场时优先采用「月付」或「季付」实测本地运营商晚高峰表现，确认稳定后再考虑年付特惠（如光速云 ¥99/年或肥猫云 ¥96/年）；2）采用「主力包月专线 + 备用不限时流量包」双保险策略（例如备一份光速云 ¥147 永久 247GB 或威图云 ¥90 不限时 200GB 流量包），防止单一机场机房维护时失联；3）注册后及时保存机场官方防失联域名与 Telegram 通知频道。"
   }
 ]

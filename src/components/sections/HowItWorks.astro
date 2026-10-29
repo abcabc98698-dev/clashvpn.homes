@@ -1,31 +1,30 @@
 ---
-import { SITE } from "../../config";
 import SectionHeading from "../SectionHeading.astro";
 
 const steps = [
   {
-    title: "Call or send the form",
-    text: "Tell us what's wrong and send a photo if you can. During opening hours we reply within an hour; the emergency line is answered around the clock.",
+    title: "确定场景与预算档位",
+    text: "根据日常需求（AI 编程办公、4K 流媒体观影或轻量查资料）选择对应档位：主力推荐 ¥8–15/月的 IEPL 专线（如 #1 光速云、#2 肥猫云），轻度或备用推荐按量不限时流量包。",
   },
   {
-    title: "Agree a written price",
-    text: `We diagnose on site and write down the price: labor, standard parts and cleanup. The ${SITE.trust.callOut} call-out comes off it. Anything extra we find, we price separately and ask first.`,
+    title: "复制优惠码并获取订阅",
+    text: "在品牌详情页一键复制专属折扣码（例如光速云 8 折码 AMM、肥猫云 8 折码 feimao888），前往官网注册并复制 Clash 或通用订阅地址。",
   },
   {
-    title: "We fix it and test it",
-    text: "We pressure-test the repair, clean up and email the invoice with before and after photos. Labor is guaranteed for two years.",
+    title: "导入客户端开启智能分流",
+    text: "使用品牌免配置自研客户端一键登录，或在客户端大全下载 Clash Verge Rev / 小火箭导入订阅，开启 Rule 规则模式实现国内直连、海外极速访问。",
   },
 ];
 ---
 
 <section class="section border-y border-line bg-surface" aria-labelledby="how-title">
   <div class="container-x">
-    <SectionHeading id="how-title" title="How a *repair* works" lead="The same three steps for a dripping tap and a burst pipe." />
+    <SectionHeading id="how-title" title="三步完成 *高速专线订阅* 部署" lead="无论是零基础新手还是多平台极客，3 分钟即可跑通全套跨境分流。" />
     <ol class="stagger mt-14 grid gap-10 lg:grid-cols-3 lg:gap-12">
       {
         steps.map((step, i) => (
           <li class="border-t border-line pt-6" style={`--i:${i}`}>
-            <span class="text-sm font-bold text-accent-ink tabular-nums">Step {i + 1}</span>
+            <span class="text-sm font-bold text-accent-ink tabular-nums">第 {i + 1} 步</span>
             <h3 class="mt-2 text-xl font-bold tracking-tight">{step.title}</h3>
             <p class="mt-3 leading-relaxed text-muted">{step.text}</p>
           </li>

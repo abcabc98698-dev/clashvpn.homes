@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { SITE } from "../config";
 import Icon from "./Icon.astro";
 import ServiceArt from "./ServiceArt.astro";
 
@@ -12,17 +11,17 @@ const { title, summary, priceFrom, priceNote, duration, featured, art } = servic
 ---
 
 <article class="card-accent card-lift flex h-full flex-col p-7 sm:p-8">
-  <h3 class="text-[1.5rem] leading-tight font-semibold tracking-tight">
+  <h3 class="text-[1.45rem] leading-tight font-semibold tracking-tight">
     <a href={`/services/${service.id}/`} class="stretched rounded-md">{title}</a>
   </h3>
-  <p class="mt-3 flex-1 text-[0.98rem] leading-relaxed font-medium opacity-80">{summary}</p>
+  <p class="mt-3 flex-1 text-[0.95rem] leading-relaxed font-medium opacity-85">{summary}</p>
   <div class="mt-8 mb-6">
     <ServiceArt name={art} />
   </div>
   <div class="flex items-end justify-between gap-4 border-t border-current/20 pt-5">
     <p class="leading-tight">
-      {priceFrom && <span class="block text-2xl font-semibold tracking-tight">From {priceFrom}</span>}
-      <span class="mt-1 block text-sm font-medium opacity-75">{priceNote ?? duration}</span>
+      {priceFrom && <span class="block text-2xl font-semibold tracking-tight">{priceFrom} 起</span>}
+      <span class="mt-1 block text-sm font-medium opacity-80">{priceNote ?? duration}</span>
     </p>
     <span class="card-arrow grid size-10 shrink-0 place-items-center rounded-full border border-current/30">
       <Icon name="arrow-right" size={18} />
@@ -30,8 +29,8 @@ const { title, summary, priceFrom, priceNote, duration, featured, art } = servic
   </div>
   {
     featured && (
-      <a href={`tel:${SITE.emergencyPhone.tel}`} class="btn btn-dark relative z-10 mt-6">
-        Emergency line {SITE.emergencyPhone.display}
+      <a href="/brands/guangsuyun/" class="btn btn-dark relative z-10 mt-6">
+        直达 #1 光速云实测 (优惠码 AMM)
       </a>
     )
   }

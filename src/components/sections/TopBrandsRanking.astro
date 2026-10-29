@@ -1,0 +1,256 @@
+---
+import {
+  FEATURED_BRAND,
+  TOP10_BRANDS,
+  AFFILIATE_DISCLOSURE,
+  getSpeedtestStatusMeta,
+} from "../../data/brands";
+import SectionHeading from "../SectionHeading.astro";
+import Icon from "../Icon.astro";
+---
+
+<section id="top10-ranking" class="section border-y border-line bg-surface" aria-labelledby="ranking-title">
+  <div class="container-x">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <SectionHeading
+        id="ranking-title"
+        title="2026 年度 TOP 10 *机场订阅实测总榜*"
+        lead="基于 2026-08-11 原始测速图、IEPL/IPLC 专线比例、AI/流媒体解锁能力与折后性价比综合排定。"
+      />
+      <div class="flex flex-wrap gap-3 shrink-0">
+        <a href="/brands/" class="btn btn-primary">
+          检索全部 42 家品牌库 <Icon name="arrow-right" class="icon-shift" />
+        </a>
+        <a href="/clients/" class="btn btn-secondary">
+          全平台客户端下载
+        </a>
+      </div>
+    </div>
+
+    <!-- #1 Featured Spotlight Card: 光速云 -->
+    <div class="mt-12 rounded-[22px] border border-white/15 bg-[#0A0F1D] p-6 sm:p-9 text-[#F8FAFC] shadow-2xl">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-5">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-[#ff7a29] px-3.5 py-1 text-xs font-extrabold tracking-wide text-[#0b0e1c] whitespace-nowrap">
+            TOP #1 年度综合首选推荐
+          </span>
+          <span class="rounded-full border border-[#10B981]/40 bg-[#10B981]/15 px-3 py-1 font-mono text-xs font-semibold text-[#10B981] whitespace-nowrap">
+            Measured Data · 2026-08-11 实测峰值 685.56Mbps
+          </span>
+          <span class="rounded-full border border-white/10 bg-[#111827] px-3 py-1 font-mono text-xs text-[#06B6D4] whitespace-nowrap">
+            双 IEPL 专线 + 自研免配置客户端
+          </span>
+        </div>
+        <span class="font-mono text-xs text-[#94A3B8] whitespace-nowrap">
+          创立年份：{FEATURED_BRAND.foundedYear} · 支持支付宝/微信
+        </span>
+      </div>
+
+      <div class="mt-6 grid gap-8 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <div class="flex flex-wrap items-baseline gap-3">
+            <h3 class="font-display text-2xl font-extrabold text-white sm:text-3xl whitespace-nowrap">
+              <a href={`/brands/${FEATURED_BRAND.slug}/`} class="hover:text-[#ff7a29] transition">
+                {FEATURED_BRAND.name}（GuangsuYun）
+              </a>
+            </h3>
+            <span class="rounded-md bg-[#ff7a29]/15 px-2.5 py-1 font-mono text-sm font-bold text-[#ff7a29] whitespace-nowrap">
+              折后 ¥8.25/月起（¥99/年）
+            </span>
+          </div>
+
+          <p class="mt-3.5 text-sm leading-relaxed text-[#94A3B8] sm:text-base">
+            {FEATURED_BRAND.summary}
+          </p>
+
+          <ul class="mt-5 grid gap-2.5 sm:grid-cols-2 text-sm text-[#E2E8F0]">
+            {FEATURED_BRAND.coreFeatures.map((feat) => (
+              <li class="flex items-start gap-2 leading-snug">
+                <span class="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-[#10B981]"></span>
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
+
+          <!-- Quick Plan Pills -->
+          <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {FEATURED_BRAND.plans.map((plan) => (
+              <div class="rounded-xl border border-white/10 bg-[#111827] p-3.5">
+                <div class="text-xs font-medium text-[#94A3B8] truncate">{plan.name}</div>
+                <div class="mt-1 font-mono text-sm sm:text-base font-bold text-white whitespace-nowrap">
+                  {plan.price}
+                </div>
+                <div class="mt-0.5 text-xs font-mono text-[#06B6D4] whitespace-nowrap">
+                  {plan.traffic}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Coupon & Action Box -->
+        <div class="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#111827] p-5 sm:p-6 lg:col-span-5">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-mono text-xs uppercase tracking-wider text-[#94A3B8] whitespace-nowrap">
+                EXCLUSIVE COUPON · 专属 8 折码
+              </span>
+              <span class="rounded bg-[#ff7a29]/20 px-2 py-0.5 font-mono text-xs font-bold text-[#ff7a29] whitespace-nowrap">
+                全场立减 20%
+              </span>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between gap-3 rounded-xl border border-dashed border-[#ff7a29]/60 bg-[#0A0F1D] px-4 py-3">
+              <div>
+                <div class="text-xs text-[#94A3B8]">结账输入优惠码：</div>
+                <div class="font-mono text-2xl font-extrabold tracking-widest text-[#ff7a29]">
+                  {FEATURED_BRAND.couponCode}
+                </div>
+              </div>
+              <button
+                type="button"
+                data-copy-code={FEATURED_BRAND.couponCode}
+                class="shrink-0 whitespace-nowrap rounded-lg bg-[#ff7a29] px-3.5 py-2 text-xs font-bold text-[#0b0e1c] transition hover:opacity-90 cursor-pointer"
+              >
+                复制优惠码
+              </button>
+            </div>
+
+            <p class="mt-3 text-xs leading-relaxed text-[#94A3B8]">
+              {FEATURED_BRAND.couponNote}。支持一键导入 Clash Verge Rev、Shadowrocket（小火箭）及官方免配置客户端。
+            </p>
+          </div>
+
+          <div class="mt-6 space-y-2.5">
+            <div class="grid gap-2.5 sm:grid-cols-2">
+              {FEATURED_BRAND.registerUrl && (
+                <a
+                  href={FEATURED_BRAND.registerUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener"
+                  class="btn btn-primary w-full text-center text-sm"
+                >
+                  前往光速云官网 ↗
+                </a>
+              )}
+              <a
+                href={`/brands/${FEATURED_BRAND.slug}/`}
+                class="btn btn-secondary w-full border-white/20 bg-white/5 text-white hover:bg-white/10 text-sm"
+              >
+                查看完整测速与评测
+              </a>
+            </div>
+            <p class="text-[11px] leading-snug text-[#64748B]">
+              * {AFFILIATE_DISCLOSURE}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP 10 Comparison Table -->
+    <div class="mt-10 overflow-x-auto rounded-2xl border border-line bg-bg shadow-sm">
+      <table class="w-full min-w-[920px] text-left text-sm">
+        <thead>
+          <tr class="border-b border-line bg-surface text-xs font-bold uppercase tracking-wider text-muted whitespace-nowrap">
+            <th class="py-4 pl-6 pr-3">排名</th>
+            <th class="px-3 py-4">机场品牌</th>
+            <th class="px-3 py-4">线路架构</th>
+            <th class="px-3 py-4">入门价格</th>
+            <th class="px-3 py-4">专属优惠码</th>
+            <th class="px-3 py-4">2026-08-11 实测代表速率</th>
+            <th class="px-3 py-4">客户端支持</th>
+            <th class="py-4 pl-3 pr-6 text-right">详情与测速图</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          {TOP10_BRANDS.map((brand) => {
+            const stMeta = getSpeedtestStatusMeta(brand.speedtest.status);
+            const topNode = brand.speedtest.nodes[0];
+            return (
+              <tr class="transition hover:bg-surface/60">
+                <td class="py-4 pl-6 pr-3 font-mono font-bold whitespace-nowrap">
+                  <span
+                    class:list={[
+                      "inline-grid size-7 place-items-center rounded-full text-xs font-extrabold",
+                      brand.rank === 1
+                        ? "bg-accent text-accent-text"
+                        : brand.rank <= 3
+                          ? "bg-ink text-bg"
+                          : "bg-surface text-ink border border-line",
+                    ]}
+                  >
+                    #{brand.rank}
+                  </span>
+                </td>
+                <td class="px-3 py-4 whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    <a href={`/brands/${brand.slug}/`} class="font-bold text-ink hover:text-accent-ink">
+                      {brand.name}
+                    </a>
+                    {brand.badge && (
+                      <span class="inline-block rounded bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent-ink whitespace-nowrap">
+                        {brand.badge}
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td class="px-3 py-4 font-medium whitespace-nowrap">{brand.lineType}</td>
+                <td class="px-3 py-4 font-mono font-bold text-accent-ink whitespace-nowrap">
+                  {brand.entryPriceLabel}
+                </td>
+                <td class="px-3 py-4 font-mono text-xs whitespace-nowrap">
+                  {brand.couponCode ? (
+                    <span class="inline-flex items-center gap-1 rounded border border-line bg-surface px-2 py-0.5 font-semibold">
+                      {brand.couponCode}
+                    </span>
+                  ) : (
+                    <span class="text-muted">官网直减</span>
+                  )}
+                </td>
+                <td class="px-3 py-4 font-mono text-xs whitespace-nowrap">
+                  {topNode ? (
+                    <div>
+                      <span class="font-semibold text-ink">{topNode.region}: {topNode.download}</span>
+                      <span class="ml-1.5 text-muted">({stMeta.shortLabel})</span>
+                    </div>
+                  ) : (
+                    <span class="text-muted">待核实</span>
+                  )}
+                </td>
+                <td class="px-3 py-4 text-xs text-muted whitespace-nowrap">{brand.clientSupport}</td>
+                <td class="py-4 pl-3 pr-6 text-right whitespace-nowrap">
+                  <a
+                    href={`/brands/${brand.slug}/`}
+                    class="inline-flex items-center gap-1 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-bold hover:border-ink whitespace-nowrap"
+                  >
+                    独立评测 <Icon name="arrow-right" size={14} />
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-copy-code]")) {
+    btn.addEventListener("click", async () => {
+      const code = btn.dataset.copyCode;
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        const orig = btn.textContent;
+        btn.textContent = "已复制 " + code;
+        setTimeout(() => {
+          btn.textContent = orig;
+        }, 2000);
+      } catch {
+        // Fallback if clipboard API restricted
+      }
+    });
+  }
+</script>

@@ -1,7 +1,6 @@
 ---
 /**
- * Decorative map placeholder. Replace it with an embedded map or a static map image of your address.
- * (An iframe map loads third-party scripts and cookies; a static image or a plain link keeps the page fast.)
+ * Decorative vector map showing the core hub without third-party tracking scripts or cookies.
  */
 import { SITE } from "../../config";
 const { address } = SITE;
@@ -27,8 +26,8 @@ const { address } = SITE;
     </g>
   </svg>
   <figcaption class="flex flex-col gap-1 border-t border-line p-5 text-sm sm:flex-row sm:items-center sm:justify-between">
-    <span class="font-semibold">{address.street}, {address.city}, {address.region} {address.postalCode}</span>
-    <span class="text-muted">Map placeholder</span>
+    <span class="font-semibold">{address.street} · {address.city}, {address.region}</span>
+    <span class="text-muted">全天候可观测性节点监控中心 · {address.city}</span>
   </figcaption>
 </figure>
 

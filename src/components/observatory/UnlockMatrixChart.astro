@@ -1,0 +1,171 @@
+---
+import type { AirportBrand } from "../../data/brands-types";
+import { getUnlockStatusMeta } from "../../data/brands";
+
+interface Props {
+  brand: AirportBrand;
+}
+
+const { brand } = Astro.props;
+const statusMeta = getUnlockStatusMeta(brand.unlock.status);
+
+const AI_SERVICES = [
+  { id: "ChatGPT", label: "ChatGPT / OpenAI", desc: "GPT-4o / o1 网页与 App 访问" },
+  { id: "Claude", label: "Claude 3.5 / Anthropic", desc: "Claude.ai 纯净原生节点要求高" },
+  { id: "Gemini", label: "Google Gemini / AI Studio", desc: "美/日/新等非受限区节点访问" },
+  { id: "Copilot", label: "GitHub Copilot / Cursor", desc: "IDE 代码补全与 API 极速响应" },
+];
+
+const MEDIA_SERVICES = [
+  { id: "Netflix", label: "Netflix 4K 非自制剧", desc: "港区/新区/美区/日区原生解锁" },
+  { id: "Disney+", label: "Disney+ 流媒体", desc: "漫威/星战 4K HDR 区域版权解锁" },
+  { id: "YouTube", label: "YouTube 4K / 8K", desc: "高码率视频秒开与无广告区切换" },
+  { id: "TikTok", label: "TikTok 国际版", desc: "免拔卡区域定向与直播推流" },
+  { id: "Spotify", label: "Spotify / Apple Music", desc: "跨区曲库解锁与歌词同步" },
+  { id: "HBO", label: "Max (HBO) / Hulu", desc: "北美主流影视流媒体解锁" },
+];
+
+function checkState(
+  serviceId: string,
+  supportedList: string[],
+  conditionalList: string[],
+  overallStatus: AirportBrand["unlock"]["status"]
+): { state: "supported" | "conditional" | "pending"; label: string; color: string; bg: string } {
+  if (overallStatus === "unverified" && supportedList.length === 0) {
+    return {
+      state: "pending",
+      label: "待核实",
+      color: "#94A3B8",
+      bg: "rgba(148, 163, 184, 0.14)",
+    };
+  }
+  const inSupported = supportedList.some((s) =>
+    s.toLowerCase().includes(serviceId.toLowerCase())
+  );
+  if (inSupported) {
+    return {
+      state: "supported",
+      label: "支持解锁",
+      color: "#10B981",
+      bg: "rgba(16, 185, 129, 0.15)",
+    };
+  }
+  const inConditional = conditionalList.some((s) =>
+    s.toLowerCase().includes(serviceId.toLowerCase())
+  );
+  if (inConditional) {
+    return {
+      state: "conditional",
+      label: "按节点支持",
+      color: "#F59E0B",
+      bg: "rgba(245, 158, 11, 0.15)",
+    };
+  }
+  return {
+    state: "conditional",
+    label: "需选对应地区节点",
+    color: "#06B6D4",
+    bg: "rgba(6, 182, 212, 0.14)",
+  };
+}
+---
+
+<section
+  class="rounded-[18px] border border-white/10 bg-[#0A0F1D] p-6 sm:p-8 text-[#F8FAFC] shadow-2xl"
+  aria-label={`${brand.name} 流媒体与 AI 生产力解锁可用性矩阵`}
+>
+  <!-- Header -->
+  <div class="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#3B82F6] shadow-[0_0_12px_#3B82F6]"></span>
+        <span class="font-mono text-xs uppercase tracking-widest text-[#94A3B8]">
+          SERVICE AVAILABILITY MATRIX · 解锁能力看板
+        </span>
+      </div>
+      <h3 class="mt-1.5 font-display text-xl font-bold text-white sm:text-2xl">
+        {brand.name} AI 大模型与 4K 流媒体可用性矩阵
+      </h3>
+    </div>
+
+    <span
+      class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-semibold"
+      style={`background:${statusMeta.bg};color:${statusMeta.color};border:1px solid ${statusMeta.border}`}
+    >
+      <span class="h-1.5 w-1.5 rounded-full" style={`background:${statusMeta.color}`}></span>
+      {statusMeta.label}
+    </span>
+  </div>
+
+  <!-- Partition 1: AI Productivity -->
+  <div class="mt-6">
+    <div class="mb-3 flex items-center justify-between">
+      <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#06B6D4]">
+        01 / AI 生产力与研发工具解锁 (AI Productivity)
+      </span>
+      <span class="font-mono text-xs text-[#64748B]">建议避开香港节点，优选美/日/新/台节点</span>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2">
+      {AI_SERVICES.map((item) => {
+        const res = checkState(
+          item.id,
+          brand.unlock.aiSupported,
+          brand.unlock.aiConditional,
+          brand.unlock.status
+        );
+        return (
+          <div class="flex items-center justify-between gap-3 rounded-xl border border-white/8 bg-[#111827]/85 p-3.5">
+            <div>
+              <div class="font-semibold text-sm text-white">{item.label}</div>
+              <div class="mt-0.5 text-xs text-[#94A3B8]">{item.desc}</div>
+            </div>
+            <span
+              class="shrink-0 rounded-full px-2.5 py-1 font-mono text-xs font-semibold"
+              style={`background:${res.bg};color:${res.color}`}
+            >
+              {res.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Partition 2: 4K Streaming -->
+  <div class="mt-6">
+    <div class="mb-3 flex items-center justify-between">
+      <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#10B981]">
+        02 / 全球 4K 流媒体与区域版权解锁 (Streaming Media)
+      </span>
+      <span class="font-mono text-xs text-[#64748B]">支持原生/DNS解锁路由</span>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {MEDIA_SERVICES.map((item) => {
+        const res = checkState(
+          item.id,
+          brand.unlock.mediaSupported,
+          brand.unlock.mediaConditional,
+          brand.unlock.status
+        );
+        return (
+          <div class="flex items-center justify-between gap-3 rounded-xl border border-white/8 bg-[#111827]/85 p-3.5">
+            <div>
+              <div class="font-semibold text-sm text-white">{item.label}</div>
+              <div class="mt-0.5 text-xs text-[#94A3B8]">{item.desc}</div>
+            </div>
+            <span
+              class="shrink-0 rounded-full px-2.5 py-1 font-mono text-xs font-semibold"
+              style={`background:${res.bg};color:${res.color}`}
+            >
+              {res.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <p class="mt-5 text-xs leading-relaxed text-[#94A3B8]">
+    数据源标注：{brand.unlock.note}
+  </p>
+</section>

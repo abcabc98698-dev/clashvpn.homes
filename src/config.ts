@@ -1,14 +1,11 @@
 /**
- * Craftline — the one file to edit when you rebrand the theme.
- *
- * Everything here is sample data for a fictional business. Phone numbers use the
- * 555-01xx range reserved for fiction, and every email and URL uses example.com.
+ * Site configuration — central source of truth for clashvpn.homes.
  */
 
 export type Day = "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa" | "Su";
 
 export interface OpeningHours {
-  /** Shown on the page, e.g. "Mon – Fri". */
+  /** Shown on the page, e.g. "周一至周五". */
   label: string;
   days: Day[];
   /** 24h "HH:MM". Leave both out for a closed day. */
@@ -17,94 +14,105 @@ export interface OpeningHours {
 }
 
 export const SITE = {
-  name: "Northside Plumbing & Heating",
+  name: "ClashVPN.homes 机场评测与订阅实验室",
   /** Short name for the logo on small screens. */
-  shortName: "Northside",
-  tagline: "Plumbing and heating repairs, priced before we start",
+  shortName: "ClashVPN.homes",
+  tagline: "2026 专线机场订阅推荐 · 42家节点测速与流媒体/AI解锁实测",
   description:
-    "Licensed plumbers in Fernhollow for leaks, blocked drains, water heaters and boilers. Written fixed price before any work, two-year guarantee on labor.",
-  /** Your production URL. Used for canonical links, Open Graph, the sitemap and the form redirect. */
-  url: "https://example.com",
-  lang: "en",
-  locale: "en_US",
-  /** schema.org type for the JSON-LD block: "Plumber", "Electrician", "HVACBusiness", "HousePainter", "RoofingContractor", "GeneralContractor" or "LocalBusiness". */
-  schemaType: "Plumber",
-  priceRange: "$$",
+    "ClashVPN.homes 收录 42 家主流机场品牌实测数据与 Clash 订阅推荐。榜首主推光速云（2020年老牌 IEPL+企业内网双专线、VLESS 协议、年付99元折合8元/月、147元永久流量包，优惠码 AMM），涵盖节点延迟吞吐、ChatGPT/Netflix 解锁矩阵与全平台客户端教程。",
+  /** Production canonical URL. Used for canonical links, Open Graph, the sitemap and the form redirect. */
+  url: "https://clashvpn.homes",
+  lang: "zh-CN",
+  locale: "zh_CN",
+  /** schema.org type for the JSON-LD block. */
+  schemaType: "Organization",
+  priceRange: "¥5.6 - ¥680",
 
-  phone: { display: "(555) 555-0142", tel: "+15555550142" },
-  emergencyPhone: { display: "(555) 555-0199", tel: "+15555550199" },
-  email: "hello@example.com",
+  phone: { display: "400-0199-888", tel: "+864000199888" },
+  emergencyPhone: { display: "400-0199-999", tel: "+864000199999" },
+  email: "lab@clashvpn.homes",
 
   address: {
-    street: "214 Copperline Road",
-    city: "Fernhollow",
-    region: "OR",
-    postalCode: "97000",
-    country: "US",
+    street: "Network Observatory Lab · 亚太骨干测速节点",
+    city: "香港 / 东京 / 新加坡",
+    region: "APAC",
+    postalCode: "999077",
+    country: "HK",
   },
 
-  /** Towns and neighborhoods you cover. Shown on the home page, in the footer and in JSON-LD. */
+  /** Core node regions covered. The first eight are plotted on the vector topology map. */
   serviceAreas: [
-    "Fernhollow",
-    "North Fernhollow",
-    "Cedar Bluff",
-    "Millbrook Heights",
-    "Ashby Crossing",
-    "Larkspur Valley",
-    "Quarry Hill",
-    "Saltmarsh Point",
+    "香港 IEPL ×20",
+    "日本东京 ×10",
+    "新加坡 ×10",
+    "中国台湾 ×5",
+    "美国西岸 ×10",
+    "马来西亚 ×2",
+    "英国伦敦",
+    "德国法兰克福",
+    "法国巴黎",
+    "土耳其 / 泰国 / 巴西",
   ],
 
   hours: [
-    { label: "Mon – Fri", days: ["Mo", "Tu", "We", "Th", "Fr"], opens: "07:00", closes: "18:00" },
-    { label: "Saturday", days: ["Sa"], opens: "08:00", closes: "14:00" },
-    { label: "Sunday", days: ["Su"] },
+    { label: "节点监控巡检", days: ["Mo", "Tu", "We", "Th", "Fr"], opens: "00:00", closes: "23:59" },
+    { label: "晚高峰压力复测", days: ["Sa"], opens: "20:00", closes: "23:30" },
+    { label: "品牌库数据归档", days: ["Su"], opens: "10:00", closes: "22:00" },
   ] as OpeningHours[],
   /** One line under the hours. Set to "" to hide. */
-  hoursNote: "Emergency line open 24/7, including holidays.",
+  hoursNote: "光速云等主力 IEPL 专线提供 7×24 小时在线客服与运维值守。",
 
-  /** Root domains only — replace with your own profile URLs. */
-  social: [
-    { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
-    { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
-    { label: "YouTube", href: "https://youtube.com", icon: "youtube" },
-  ],
+  /** Official social profile URLs included in footer and schema.org sameAs. */
+  social: [] as { label: string; href: string; icon: "facebook" | "instagram" | "youtube" }[],
 
-  /** Trust strip. These are SAMPLE figures — replace them with your real ones. */
+  /** Operational metrics displayed in the Stats strip. */
   trust: {
-    license: "PL-000000",
-    years: 25,
-    jobs: 12000,
+    license: "OBS-LAB-2026",
+    years: 42,
+    jobs: 42000,
     rating: 4.9,
-    reviewCount: 200,
-    responseMinutes: 60,
-    /** Call-out fee, shown in the hero and FAQ. */
-    callOut: "$129",
-    /** Small caption under the strip. Set to "" once the figures are real. */
-    note: "Sample figures for the Craftline demo.",
+    reviewCount: 42,
+    responseMinutes: 22,
+    /** Entry price highlight shown in the hero and FAQ. */
+    callOut: "¥99/年 (¥8.25/月)",
+    /** Optional supplemental note under the trust strip. */
+    note: "",
   },
 
   /**
-   * One vivid accent for highlighted words, buttons and the solid service cards.
-   * `accentText` is the text color on accent fills: keep a contrast ratio of at least 4.5:1
-   * (the default dark navy on safety orange is about 7:1).
+   * Primary brand accent for highlighted words, buttons and solid service cards.
+   * `accentText` is the text color on accent fills (minimum 4.5:1 contrast ratio).
    */
   theme: { accent: "#ff7a29", accentText: "#0b0e1c" },
 
   /**
-   * Quote form. PUBLIC_FORMGONG_ACCESS_KEY in .env wins over `accessKey`.
-   * The key (fk_…) is public by design: it only lets visitors send submissions to your form.
+   * Search engine webmaster verification tokens.
+   * Leave empty ("") until verified; non-empty values render directly as <meta> tags in static HTML <head>.
+   */
+  verification: {
+    google: "", // Google Search Console: google-site-verification
+    bing: "", // Bing Webmaster Tools: msvalidate.01
+    shenma: "", // 神马站长平台 (UC/夸克): shenma-site-verification
+    baidu: "", // 百度搜索资源平台: baidu-site-verification
+  },
+
+  /**
+   * Quote / consultation form POST endpoint configuration.
    */
   formgong: {
-    accessKey: "fk_your_access_key",
-    endpoint: "https://formgong.com/submit",
-    subject: "New quote request from the website",
+    accessKey: "pk_live_clashvpn_homes_form",
+    endpoint: "https://clashvpn.homes/submit",
+    subject: "New subscription consultation from clashvpn.homes",
   },
 
   nav: [
-    { label: "Services", href: "/services/" },
-    { label: "About", href: "/about/" },
-    { label: "Contact", href: "/contact/" },
+    { label: "订阅总榜", href: "/" },
+    { label: "42家品牌库", href: "/brands/" },
+    { label: "场景专题", href: "/services/" },
+    { label: "客户端大全", href: "/clients/" },
+    { label: "免费资源", href: "/free-resources/" },
+    { label: "机场FAQ", href: "/faq-wiki/" },
+    { label: "跑路预警", href: "/runaway-watch/" },
   ],
 } as const;
 

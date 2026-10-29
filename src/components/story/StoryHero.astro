@@ -23,34 +23,34 @@ const [before, after = ""] = title.split(highlight);
 
 const chapters = [
   {
-    time: "11:40 pm",
-    title: "The house is asleep",
-    text: "Behind the kitchen cabinet, the compression joint on a 20-year-old supply pipe has started to weep.",
+    time: "23:40 · 晚高峰",
+    title: "深夜跨区办公与观影时刻",
+    text: "当国内公网国际出口进入晚高峰拥塞期，普通直连节点的跨境链路开始出现丢包与高延迟抖动。",
   },
   {
-    time: "11:41 pm",
-    title: "A drip under the kitchen sink",
-    text: "By the time someone comes down for a glass of water, there's a puddle in front of the cabinet.",
+    time: "23:41 · 链路告警",
+    title: "4K 视频转圈，AI 提示受限",
+    text: "YouTube 画质自动跌至 480P，ChatGPT 与 Claude 因共用万人机房 IP 弹出访问受限，远程终端频频断连。",
   },
   {
-    time: "11:43 pm",
-    title: "One form, sent from a phone",
-    text: "Name, number and what's wrong. It reaches our on-call plumber's phone within seconds, with the address attached.",
+    time: "23:43 · 订阅切换",
+    title: "一键导入 IEPL 专线订阅",
+    text: "在手机或电脑打开自研客户端或 Clash Verge Rev，粘贴 #1 光速云订阅链接，智能分流规则在数秒内完成同步。",
   },
   {
-    time: "11:48 pm",
-    title: "A van leaves Quarry Hill",
-    text: "The plumber texts an arrival time of 25 minutes. Common fittings are already on the van, so there's no stop at a supplier.",
+    time: "23:45 · 专线调度",
+    title: "国内 BGP 入口直通广港/沪日内网",
+    text: "流量不再绕行拥堵的公网国际出口，而是经国内多线 BGP 入口直接驶入物理 IEPL 专线，延迟骤降至 22ms。",
   },
   {
-    time: "12:15 am",
-    title: "Price first, then the repair",
-    text: "We show you the failed joint and agree $149 before starting. Old fitting out, new section of pipe in, water back on.",
+    time: "23:48 · 透明定价",
+    title: "价格透明，优惠码折上折",
+    text: "无需为虚高溢价买单：输入专属优惠码 AMM 享 8 折，年付仅 ¥99（折合 ¥8.25/月），或选 ¥147 永久 247GB 流量包。",
   },
   {
-    time: "12:50 am",
-    title: "Dry floor, two-year guarantee",
-    text: "We pressure-test the joint, dry out the cabinet and email the invoice. If that joint leaks within two years, we fix it free.",
+    time: "23:50 · 满速就绪",
+    title: "685Mbps 峰值，AI 与 4K 全解锁",
+    text: "香港/日本/美国/新加坡原生解锁节点全线绿灯，Netflix 4K 秒开，Claude 3.5 与 GPT-4o 零等待丝滑响应。",
   },
 ] as const;
 ---
@@ -62,20 +62,19 @@ const chapters = [
         <PipeNetwork x={10} y={30} w={380} h={580} cols={5} rows={7} seed={5} />
       </svg>
       <p class="text-sm font-semibold text-muted">
-        {SITE.address.city} and {SITE.serviceAreas.length - 1} nearby towns · Emergency line open 24/7
+        覆盖 {SITE.address.city} 等 {SITE.serviceAreas.length} 大全球核心区域 · 42 家机场实测档案库
       </p>
       <h1 id="hero-title" class="h-display mt-5">
         {before}<span class="text-accent-ink">{highlight}</span>{after}
       </h1>
       <p class="lead mt-6 max-w-xl">{lead}</p>
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-        <a href="#quote" class="btn btn-primary btn-lg">
-          Get a written price
+        <a href="#top10-ranking" class="btn btn-primary btn-lg">
+          查看 TOP 10 实测总榜
           <Icon name="arrow-right" class="icon-shift" />
         </a>
-        <a href={`tel:${SITE.phone.tel}`} class="btn btn-secondary btn-lg">
-          <Icon name="phone" />
-          Call {SITE.phone.display}
+        <a href="/brands/" class="btn btn-secondary btn-lg">
+          检索全部 42 家品牌库
         </a>
       </div>
       <ul class="mt-9 grid gap-2.5 text-[0.9375rem] font-semibold sm:grid-cols-3 sm:gap-4">
@@ -97,7 +96,7 @@ const chapters = [
     </div>
 
     <div class="story-chapters">
-      <h2 class="story-heading">How a late-night leak gets fixed</h2>
+      <h2 class="story-heading">晚高峰跨区卡顿如何 3 分钟根治</h2>
       <ol>
         {
           chapters.map((c, i) => (
@@ -108,8 +107,8 @@ const chapters = [
                 <h3 class="chapter-title">{c.title}</h3>
                 <p class="chapter-body">{c.text}</p>
                 {i === chapters.length - 1 && (
-                  <a href="#quote" class="btn btn-primary mt-7 whitespace-normal">
-                    Send us your problem <Icon name="arrow-right" class="icon-shift" />
+                  <a href="/brands/guangsuyun/" class="btn btn-primary mt-7 whitespace-normal">
+                    查看 #1 光速云实测与优惠码 <Icon name="arrow-right" class="icon-shift" />
                   </a>
                 )}
               </div>

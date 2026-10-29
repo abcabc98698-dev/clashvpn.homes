@@ -1,0 +1,638 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import QuoteSection from "../../components/sections/QuoteSection.astro";
+import { SITE } from "../../config";
+import {
+  RULE_RESOURCES,
+  DIAGNOSTIC_TOOLS,
+  DOH_SERVERS,
+  MIHOMO_DNS_TEMPLATE,
+  FREE_VS_PAID_ROWS,
+  FREE_RESOURCES_FAQ,
+} from "../../data/free-resources";
+import { FEATURED_BRAND, AFFILIATE_DISCLOSURE } from "../../data/brands";
+import { articleJsonLd, faqPageJsonLd } from "../../lib/schema";
+
+const site = Astro.site ?? new URL(SITE.url);
+const pageTitle =
+  "2026 免费 Clash 资源与开源工具矩阵：分流规则集、IP纯净度检测与Sub-Store教程";
+const pageDesc =
+  "万字级免费跨境网络资源导航矩阵：收录 Loyalsoldier/ACL4SSR/MetaCubeX 分流规则集、Ping0/Scamalytics IP风控检测、WebRTC/DNS防泄漏配置、Sub-Store安全转换、流媒体解锁脚本与免费节点避坑指南。";
+
+const crumbs = [{ label: "免费资源" }];
+
+const extraJsonLd = [
+  articleJsonLd(site, {
+    headline: "免费开源资源与网络自测工具矩阵",
+    description: pageDesc,
+    urlPath: "/free-resources/",
+    datePublished: "2026-08-11",
+    dateModified: "2026-10-29",
+  }),
+  faqPageJsonLd(FREE_RESOURCES_FAQ),
+];
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  publishedTime="2026-08-11"
+  modifiedTime="2026-10-29"
+  author={SITE.name}
+  category="免费资源与开源规则"
+  tags={["Clash分流规则", "Sub-Store", "IP纯净度检测", "DoH加密DNS"]}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
+>
+  <PageHeader
+    title="免费开源资源与 *网络自测工具矩阵*"
+    lead="汇总全网真正安全可用的开源分流规则集、IP 纯净度与欺诈分检测台、防污染 DoH 加密 DNS 模板、本地订阅转换方案及美区 Apple ID 零成本注册指南。"
+    crumbs={crumbs}
+  />
+
+  <section class="section pt-10">
+    <div class="container-x grid gap-10 lg:grid-cols-12">
+      <!-- Left Sticky TOC (3 cols) -->
+      <aside class="lg:col-span-3" aria-label="本页章节目录">
+        <div class="card p-5 lg:sticky lg:top-24 space-y-5">
+          <div>
+            <div class="font-mono text-xs font-bold uppercase tracking-wider text-accent-ink">
+              MEGA GUIDE · 万字资源导航
+            </div>
+            <h2 class="mt-1 text-base font-extrabold text-ink">章节目录速跳</h2>
+          </div>
+
+          <nav class="space-y-1.5 text-xs sm:text-sm">
+            <a href="#sec-truth" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              01. 免费节点真相与低成本替代
+            </a>
+            <a href="#sec-rules" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              02. 开源分流规则集大全 (6大库)
+            </a>
+            <a href="#sec-substore" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              03. 订阅转换防泄密与 Sub-Store
+            </a>
+            <a href="#sec-diagnostic" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              04. IP 纯净度与泄漏检测矩阵
+            </a>
+            <a href="#sec-dns" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              05. DoH 加密 DNS 与防污染模板
+            </a>
+            <a href="#sec-scripts" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              06. 流媒体与回程路由开源脚本
+            </a>
+            <a href="#sec-appleid" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              07. 美区 Apple ID 零成本注册
+            </a>
+            <a href="#sec-faq" class="block rounded-lg px-3 py-2 font-medium text-muted hover:bg-surface-2 hover:text-ink">
+              08. 免费资源权威问答 (FAQ)
+            </a>
+          </nav>
+
+          <!-- Quick Conversion Mini Box -->
+          <div class="rounded-xl border border-white/15 bg-[#0A0F1D] p-4 text-white">
+            <div class="font-mono text-[11px] font-bold text-[#ff7a29]">
+              不想每天折腾失效免费节点？
+            </div>
+            <div class="mt-1 text-sm font-extrabold">
+              #1 {FEATURED_BRAND.name}：年付 ¥99（¥8.25/月）
+            </div>
+            <p class="mt-1 text-xs leading-relaxed text-[#94A3B8]">
+              双 IEPL 专线 + 自研免配置客户端，实测峰值 685Mbps，另有 ¥147 永久 247GB 流量包。
+            </p>
+            <div class="mt-3 flex gap-2">
+              <a href={`/brands/${FEATURED_BRAND.slug}/`} class="btn btn-primary min-h-8 px-3 py-1.5 text-xs w-full">
+                看 #1 实测 (8折码 AMM)
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main 10,000+ Character Content Column (9 cols) -->
+      <div class="space-y-14 lg:col-span-9">
+        <!-- Chapter 01: Free Nodes vs Paid Dedicated Lines -->
+        <article id="sec-truth" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+              一、免费节点真相：为什么“公共抓取节点”不能用来登录重要账号？
+            </h2>
+            <span class="rounded-full bg-accent-soft px-3 py-1 font-mono text-xs font-bold text-accent-ink whitespace-nowrap">
+              安全与性能对比
+            </span>
+          </div>
+
+          <div class="prose-craft mt-5">
+            <p>
+              许多新手在刚接触 Clash 或 Shadowrocket 时，第一反应往往是去 GitHub 或 Telegram 频道搜索“每日免费节点池”或“免费 Clash 订阅链接”。如果仅仅是<strong>临时应急 3 分钟下载一个开源客户端安装包</strong>，公共免费节点可以救急；但如果将其作为日常主力，甚至用它登录 <strong>ChatGPT、Claude、Google、Apple ID、PayPal 或加密货币钱包</strong>，则会面临极高的账号封禁与隐私嗅探风险。
+            </p>
+            <p>
+              原因在于：公开爬虫抓取的免费节点 95% 以上来自被黑客扫描攻破的弱口令服务器、滥用的免费 Cloudflare Workers，或专门用于钓鱼的<strong>流量蜜罐（Honeypot）</strong>。成千上万人在同一秒共用同一个出口 IP，导致其欺诈风险分（Fraud Score）长期处于 95–100 分的极高危状态。
+            </p>
+          </div>
+
+          <div class="mt-6 overflow-x-auto rounded-xl border border-line">
+            <table class="w-full min-w-[680px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-line bg-surface text-xs font-bold uppercase tracking-wider text-muted whitespace-nowrap">
+                  <th class="py-3.5 pl-4 pr-3">对比维度</th>
+                  <th class="px-3 py-3.5">网上公开抓取免费节点</th>
+                  <th class="px-3 py-3.5">按量不限时永久流量包</th>
+                  <th class="py-3.5 pl-3 pr-4 text-accent-ink">#1 光速云双 IEPL 专线主力</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-line">
+                {FREE_VS_PAID_ROWS.map((row) => (
+                  <tr class="hover:bg-surface/50">
+                    <td class="py-3.5 pl-4 pr-3 font-bold text-ink whitespace-nowrap">{row.dimension}</td>
+                    <td class="px-3 py-3.5 text-xs text-muted">{row.freePublic}</td>
+                    <td class="px-3 py-3.5 text-xs text-ink">{row.trialOrPack}</td>
+                    <td class="py-3.5 pl-3 pr-4 text-xs font-semibold text-accent-ink">{row.ieplMain}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-6 rounded-xl border border-white/12 bg-[#0A0F1D] p-5 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="text-sm font-extrabold text-[#ff7a29]">
+                理性省钱方案：免费开源客户端 + 每天不到 3 毛钱的物理专线
+              </div>
+              <p class="mt-1 text-xs text-[#94A3B8]">
+                使用本页下方完全免费的顶级开源客户端与分流规则，搭配 #1 光速云（8折码 <strong>AMM</strong> 后年付仅 ¥99，或 ¥147 买断 247GB 永久不过期流量包），彻底告别找节点的焦虑。* {AFFILIATE_DISCLOSURE}
+              </p>
+            </div>
+            <div class="flex shrink-0 gap-2">
+              <a href="/brands/guangsuyun/" class="btn btn-primary min-h-9 px-3.5 py-2 text-xs">
+                光速云实测与优惠码
+              </a>
+              <a href="/services/pay-as-you-go-traffic/" class="btn btn-secondary border-white/20 bg-white/5 text-white min-h-9 px-3.5 py-2 text-xs">
+                永久流量包对比
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Chapter 02: Open Source Rule Sets -->
+        <article id="sec-rules" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4">
+            <div>
+              <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+                二、2026 权威开源分流规则集大全（Rule-Providers & GeoData）
+              </h2>
+              <p class="mt-1 text-xs sm:text-sm text-muted">
+                精选 GitHub 维护最活跃的 6 大开源分流仓库，支持一键复制规则地址导入 Clash Verge Rev、Mihomo Party、OpenClash 或小火箭。
+              </p>
+            </div>
+            <span class="rounded-full border border-[#10B981]/40 bg-[#10B981]/15 px-3 py-1 font-mono text-xs font-semibold text-[#10B981] whitespace-nowrap">
+              100% 开源免费 · 每日更新
+            </span>
+          </div>
+
+          <div class="mt-6 grid gap-5 md:grid-cols-2">
+            {RULE_RESOURCES.map((rule) => (
+              <div class="rounded-xl border border-line bg-surface p-5 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="rounded bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink whitespace-nowrap">
+                      {rule.category}
+                    </span>
+                    <span class="font-mono text-[11px] text-muted truncate">
+                      {rule.updateFrequency}
+                    </span>
+                  </div>
+
+                  <h3 class="mt-3 text-lg font-extrabold text-ink">{rule.name}</h3>
+                  <p class="mt-2 text-xs sm:text-sm leading-relaxed text-muted">
+                    {rule.description}
+                  </p>
+
+                  <div class="mt-3 rounded-lg bg-bg p-2.5 text-xs">
+                    <div class="text-muted">适用客户端：<strong class="text-ink">{rule.supportedClients.join(" / ")}</strong></div>
+                    <div class="mt-1 text-muted">最佳场景：<span class="text-ink">{rule.bestFor}</span></div>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-line space-y-2">
+                  <div class="flex items-center justify-between gap-2 rounded-lg border border-line bg-bg px-3 py-1.5">
+                    <code class="font-mono text-[11px] text-accent-ink truncate">{rule.copyUrl}</code>
+                    <button
+                      type="button"
+                      data-copy-text={rule.copyUrl}
+                      class="shrink-0 whitespace-nowrap rounded bg-accent px-2.5 py-1 text-[11px] font-bold text-accent-text cursor-pointer"
+                    >
+                      复制地址
+                    </button>
+                  </div>
+                  <div class="flex justify-end">
+                    <a
+                      href={rule.repoUrl}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      class="text-xs font-bold text-muted hover:text-ink"
+                    >
+                      访问 GitHub 仓库主页 ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <!-- Chapter 03: Sub-Store & Local Subscription Conversion -->
+        <article id="sec-substore" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+              三、订阅转换防泄密指南与 Sub-Store 多机场聚合神器
+            </h2>
+            <span class="rounded-full border border-[#F59E0B]/40 bg-[#F59E0B]/15 px-3 py-1 font-mono text-xs font-semibold text-[#F59E0B] whitespace-nowrap">
+              核心安全警告
+            </span>
+          </div>
+
+          <div class="prose-craft mt-5">
+            <p>
+              <strong>安全红线警告：切勿将您购买的付费机场订阅链接粘贴到搜索引擎搜出来的“不明第三方在线订阅转换网站”！</strong>
+              订阅链接中包含您个人的唯一鉴权 Token（形如 <code>token=xxxx</code>）。一旦提交给不明公共后端，对方服务器日志即可直接截获您的订阅并挂入免费节点池共享，导致您的百G专线流量在一夜之间被刷空，甚至因并发 IP 过多被机场判定违规封禁。
+            </p>
+          </div>
+
+          <div class="mt-6 grid gap-5 sm:grid-cols-3">
+            <div class="rounded-xl border border-line bg-surface p-5">
+              <div class="font-mono text-xs font-bold text-[#10B981]">安全方案 01 · 最省心</div>
+              <h3 class="mt-1.5 text-base font-extrabold text-ink">直接复制机场面板原生 Clash 订阅</h3>
+              <p class="mt-2 text-xs leading-relaxed text-muted">
+                现在 95% 的主流机场（如 <a href="/brands/guangsuyun/" class="text-accent-ink underline">光速云</a>、<a href="/brands/feimaoyun/" class="text-accent-ink underline">肥猫云</a>、<a href="/brands/xingdaomeng/" class="text-accent-ink underline">星岛梦</a>）后台均自带「一键导入 Clash / Shadowrocket」按钮，云端已做好规则分组，完全无需第三方转换。
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-line bg-surface p-5">
+              <div class="font-mono text-xs font-bold text-[#06B6D4]">安全方案 02 · 多机场玩家</div>
+              <h3 class="mt-1.5 text-base font-extrabold text-ink">使用 Mihomo Party 内置本地 Sub-Store</h3>
+              <p class="mt-2 text-xs leading-relaxed text-muted">
+                在 <a href="/clients/#platform-windows" class="text-accent-ink underline">客户端大全</a> 下载开源的 <strong>Mihomo Party</strong>，其内部原生集成了本地运行的 <strong>Sub-Store</strong> 服务，所有订阅合并、节点重命名、正则过滤均在您本机内存完成，绝不外传。
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-line bg-surface p-5">
+              <div class="font-mono text-xs font-bold text-[#ff7a29]">安全方案 03 · 软路由/NAS极客</div>
+              <h3 class="mt-1.5 text-base font-extrabold text-ink">Docker 自建私有 Subconverter 后端</h3>
+              <p class="mt-2 text-xs leading-relaxed text-muted">
+                如果您拥有家庭 NAS、软路由或海外 VPS，可通过一行 Docker 命令在本地局域网部署开源 <code>tindy2013/subconverter</code> 容器，彻底掌控转换隐私。
+              </p>
+            </div>
+          </div>
+
+          <!-- Copyable Docker Command -->
+          <div class="mt-5 rounded-xl border border-white/10 bg-[#0A0F1D] p-4 text-white">
+            <div class="flex items-center justify-between gap-2 pb-2 border-b border-white/10">
+              <span class="font-mono text-xs text-[#94A3B8]">
+                本地 Docker 一键部署私有 Subconverter 与 Sub-Store 命令
+              </span>
+              <button
+                type="button"
+                data-copy-text="docker run -d --restart=always -p 25500:25500 tindy2013/subconverter:latest"
+                class="rounded bg-[#ff7a29] px-2.5 py-1 text-[11px] font-bold text-[#0b0e1c] cursor-pointer whitespace-nowrap"
+              >
+                复制 Docker 命令
+              </button>
+            </div>
+            <pre class="mt-3 overflow-x-auto font-mono text-xs text-[#10B981]"><code>docker run -d --restart=always --name subconverter -p 25500:25500 tindy2013/subconverter:latest
+# 部署后在本地浏览器或客户端调用 http://127.0.0.1:25500/sub?target=clash&url=您的编码订阅链接</code></pre>
+          </div>
+        </article>
+
+        <!-- Chapter 04: Interactive IP & Network Diagnostic Matrix -->
+        <article id="sec-diagnostic" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+            <div>
+              <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+                四、IP 纯净度、欺诈值（Fraud Score）与泄漏自测工具矩阵
+              </h2>
+              <p class="mt-1 text-xs sm:text-sm text-muted">
+                连上机场节点后，如何花费 30 秒检验这颗节点是不是原生 IP、有没有发生 WebRTC 真实 IP 泄漏、晚高峰抖动合不合格？
+              </p>
+            </div>
+
+            <!-- Interactive Category Filter -->
+            <div class="flex flex-wrap gap-1.5" id="diag-filter-group">
+              <button type="button" data-diag-filter="all" class="diag-btn rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-accent-text cursor-pointer">
+                全部工具 (8)
+              </button>
+              <button type="button" data-diag-filter="IP纯净度与风控" class="diag-btn rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-muted hover:text-ink cursor-pointer">
+                IP纯净度与风控
+              </button>
+              <button type="button" data-diag-filter="DNS与WebRTC泄漏" class="diag-btn rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-muted hover:text-ink cursor-pointer">
+                防泄漏检测
+              </button>
+              <button type="button" data-diag-filter="带宽与路由追踪" class="diag-btn rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-muted hover:text-ink cursor-pointer">
+                带宽与路由
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-6 grid gap-4 sm:grid-cols-2" id="diag-grid">
+            {DIAGNOSTIC_TOOLS.map((tool) => (
+              <div
+                class="rounded-xl border border-line bg-surface p-5 flex flex-col justify-between"
+                data-diag-card
+                data-diag-cat={tool.category}
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="rounded bg-bg px-2.5 py-0.5 font-mono text-[11px] font-bold text-accent-ink whitespace-nowrap">
+                      {tool.category}
+                    </span>
+                    <a
+                      href={tool.url}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      class="font-mono text-xs font-bold text-[#06B6D4] hover:underline whitespace-nowrap"
+                    >
+                      打开检测台 ↗
+                    </a>
+                  </div>
+                  <h3 class="mt-2.5 text-base font-extrabold text-ink">{tool.name}</h3>
+                  <p class="mt-1 font-mono text-xs text-muted">核心指标：{tool.keyMetric}</p>
+                  <p class="mt-2.5 text-xs leading-relaxed text-muted">{tool.summary}</p>
+                </div>
+
+                <div class="mt-4 rounded-lg border border-[#10B981]/30 bg-[#10B981]/10 p-3 text-xs leading-relaxed">
+                  <strong class="text-[#10B981]">合格判定标准：</strong>
+                  <span class="text-ink">{tool.passCriteria}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <!-- Chapter 05: Encrypted DNS (DoH / DoT) & Mihomo Template -->
+        <article id="sec-dns" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4">
+            <div>
+              <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+                五、加密公共 DNS（DoH / DoT）速查表与 Mihomo 防污染配置模板
+              </h2>
+              <p class="mt-1 text-xs sm:text-sm text-muted">
+                根治运营商域名劫持（DNS 污染）、解决国内网站变慢或海外流媒体解锁失效的核心配置。
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5 overflow-x-auto rounded-xl border border-line">
+            <table class="w-full min-w-[640px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-line bg-surface text-xs font-bold uppercase tracking-wider text-muted whitespace-nowrap">
+                  <th class="py-3.5 pl-4 pr-3">DNS 服务商</th>
+                  <th class="px-3 py-3.5">分流角色</th>
+                  <th class="px-3 py-3.5">DoH (DNS over HTTPS) 地址</th>
+                  <th class="px-3 py-3.5">IPv4 地址</th>
+                  <th class="py-3.5 pl-3 pr-4">技术特性与适用策略</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-line">
+                {DOH_SERVERS.map((d) => (
+                  <tr class="hover:bg-surface/50">
+                    <td class="py-3.5 pl-4 pr-3 font-bold text-ink whitespace-nowrap">{d.provider}</td>
+                    <td class="px-3 py-3.5 font-mono text-xs whitespace-nowrap">
+                      <span
+                        class:list={[
+                          "rounded px-2 py-0.5 font-bold",
+                          d.zone.includes("国内")
+                            ? "bg-[#10B981]/15 text-[#10B981]"
+                            : "bg-[#06B6D4]/15 text-[#06B6D4]",
+                        ]}
+                      >
+                        {d.zone}
+                      </span>
+                    </td>
+                    <td class="px-3 py-3.5 font-mono text-xs text-accent-ink whitespace-nowrap">
+                      {d.dohUrl}
+                    </td>
+                    <td class="px-3 py-3.5 font-mono text-xs whitespace-nowrap">{d.ipv4}</td>
+                    <td class="py-3.5 pl-3 pr-4 text-xs text-muted">{d.features}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-6 rounded-xl border border-white/12 bg-[#0A0F1D] p-5 text-white">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div>
+                <span class="font-mono text-xs font-bold text-[#06B6D4]">
+                  YAML OVERRIDE TEMPLATE · 一键复制
+                </span>
+                <h3 class="text-sm font-bold text-white">
+                  Clash Verge Rev / Mihomo Party / OpenClash 标准防泄漏 DNS 覆写片段
+                </h3>
+              </div>
+              <button
+                type="button"
+                data-copy-text={MIHOMO_DNS_TEMPLATE}
+                class="rounded-lg bg-[#ff7a29] px-3 py-1.5 text-xs font-bold text-[#0b0e1c] cursor-pointer whitespace-nowrap"
+              >
+                复制完整 YAML 配置
+              </button>
+            </div>
+            <pre class="mt-3 overflow-x-auto font-mono text-xs leading-relaxed text-[#E2E8F0]"><code>{MIHOMO_DNS_TEMPLATE}</code></pre>
+          </div>
+        </article>
+
+        <!-- Chapter 06: CLI Scripts for Streaming & Route Tracing -->
+        <article id="sec-scripts" class="card p-6 sm:p-8 scroll-mt-24">
+          <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl border-b border-line pb-4">
+            六、流媒体解锁检测与 NextTrace 可视化回程路由开源脚本
+          </h2>
+          <p class="mt-3 text-sm text-muted">
+            如果您在 Linux 桌面、macOS 终端或自建落地服务器上需要一键核验当前网络的流媒体解锁状态（Netflix / Disney+ / TikTok / ChatGPT）与去回程路由跳数，可直接使用以下权威开源脚本：
+          </p>
+
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div class="rounded-xl border border-line bg-surface p-5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-mono text-xs font-bold text-accent-ink">流媒体与 AI 全平台解锁检测</span>
+                <button
+                  type="button"
+                  data-copy-text="bash <(curl -L -s check.unlock.media)"
+                  class="rounded bg-accent px-2.5 py-1 text-[11px] font-bold text-accent-text cursor-pointer"
+                >
+                  复制命令
+                </button>
+              </div>
+              <h3 class="mt-2 text-base font-extrabold">lmc999 / RegionRestrictionCheck</h3>
+              <pre class="mt-3 overflow-x-auto rounded-lg bg-[#0A0F1D] p-3 font-mono text-xs text-[#10B981]"><code>bash &lt;(curl -L -s check.unlock.media)</code></pre>
+              <p class="mt-2.5 text-xs leading-relaxed text-muted">
+                自动检测当前出口 IP 对 Netflix（区分自制剧与非自制剧及解锁地区编码）、Disney+、YouTube Premium、TikTok、iQiyi 国际版、 Bahamut 动画疯及 OpenAI ChatGPT 的真实可用性。
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-line bg-surface p-5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-mono text-xs font-bold text-[#06B6D4]">高精度可视化路由追踪</span>
+                <button
+                  type="button"
+                  data-copy-text="curl nxtrace.org/nt | bash"
+                  class="rounded bg-accent px-2.5 py-1 text-[11px] font-bold text-accent-text cursor-pointer"
+                >
+                  复制命令
+                </button>
+              </div>
+              <h3 class="mt-2 text-base font-extrabold">NextTrace (NTrace-core)</h3>
+              <pre class="mt-3 overflow-x-auto rounded-lg bg-[#0A0F1D] p-3 font-mono text-xs text-[#06B6D4]"><code>curl nxtrace.org/nt | bash
+nexttrace 1.1.1.1</code></pre>
+              <p class="mt-2.5 text-xs leading-relaxed text-muted">
+                专为中文网络工程师打造的开源 Traceroute 工具，精准显示每一跳路由的 ASN 自治域编号、运营商名称（如电信 163 / CN2 GIA / 联通 9929 / 移动 CMIN2）以及地理位置。
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Chapter 07: US/HK Apple ID Zero-Cost Registration Guide -->
+        <article id="sec-appleid" class="card p-6 sm:p-8 scroll-mt-24">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">
+              七、苹果美区 / 港区 Apple ID 零成本注册与防锁机 6 步指南
+            </h2>
+            <span class="rounded-full bg-accent-soft px-3 py-1 font-mono text-xs font-bold text-accent-ink whitespace-nowrap">
+              iOS 小火箭必读
+            </span>
+          </div>
+
+          <div class="mt-4 rounded-xl border border-danger/40 bg-danger/10 p-4 text-xs sm:text-sm leading-relaxed text-ink">
+            <strong class="text-danger">防锁机最高铁律：</strong>
+            无论您使用共享账号还是新注册的外区 Apple ID，<strong>绝对禁止在手机「设置 -> 顶部头像 (iCloud)」中登录外区账号！</strong>只需打开桌面上的蓝色 <strong>「App Store 应用商店」</strong>，点击右上角头像滑到底部点「退出登录」，在商店内登录外区账号下载软件即可，下载完可随时切回国区账号，软件永久保留可用。
+          </div>
+
+          <ol class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 01 · 准备材料</span>
+              <h3 class="mt-1 font-bold text-sm">全新邮箱 + 国内手机号</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                准备一个从未绑定过 Apple ID 的干净邮箱（推荐 Outlook、Gmail 或 163 邮箱）以及您正常使用的中国大陆 +86 手机号（苹果完全允许 +86 手机号绑定美区账号接收双重验证码）。
+              </p>
+            </li>
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 02 · 网页创建</span>
+              <h3 class="mt-1 font-bold text-sm">访问 appleid.apple.com</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                打开浏览器无痕模式访问苹果账号官网，点击创建您的 Apple ID。<strong>国家/地区直接选择「美国 (United States)」</strong>，出生日期务必设置大于 18 周岁。
+              </p>
+            </li>
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 03 · 商店登录</span>
+              <h3 class="mt-1 font-bold text-sm">仅在 App Store 内登录</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                验证邮箱与短信后，打开 iPhone/iPad 的 App Store 商店登录该新账号。此时会弹出“此 Apple ID 尚未在 iTunes 商店使用过”，点击「检查 (Review)」。
+              </p>
+            </li>
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 04 · 免税州地址</span>
+              <h3 class="mt-1 font-bold text-sm">付款方式选 None（无）</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                同意条款后进入账单页，付款方式保持默认不选（None），州（State）选择美国五大免税州之一（如 <strong>Oregon 俄勒冈州 / 邮编 97201 / 城市 Portland</strong>），即可免税激活！
+              </p>
+            </li>
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 05 · 免费或礼品卡</span>
+              <h3 class="mt-1 font-bold text-sm">下载免费端或充值小火箭</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                激活后可直接在美区 App Store 免费下载开源无广告的 <strong>sing-box</strong> 或 <strong>Hiddify</strong>；若需购买 $2.99 的 <strong>Shadowrocket（小火箭）</strong>，在苹果美国官网购买正规 $5 Gift Card 兑换即可。
+              </p>
+            </li>
+            <li class="rounded-xl border border-line bg-surface p-4">
+              <span class="font-mono text-xs font-bold text-accent-ink">STEP 06 · 一键导入订阅</span>
+              <h3 class="mt-1 font-bold text-sm">扫码或一键同步专线节点</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted">
+                安装完成后，前往 <a href="/brands/guangsuyun/" class="text-accent-ink underline">#1 光速云</a> 或 <a href="/brands/" class="text-accent-ink underline">42家品牌库</a> 获取机场订阅，点击「一键导入 Shadowrocket」即可秒连。
+              </p>
+            </li>
+          </ol>
+        </article>
+
+        <!-- Chapter 08: Free Resources GEO FAQ -->
+        <article id="sec-faq" class="card p-6 sm:p-8 scroll-mt-24">
+          <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl border-b border-line pb-4">
+            八、免费资源、开源规则与订阅安全常见问答（GEO 权威解答）
+          </h2>
+          <div class="mt-6 divide-y divide-line">
+            {FREE_RESOURCES_FAQ.map((item) => (
+              <div class="py-5 first:pt-0 last:pb-0">
+                <h3 class="text-base font-bold text-ink">{item.q}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <!-- Internal Link Hub Matrix -->
+        <div class="rounded-2xl border border-line bg-surface p-6 sm:p-8">
+          <h2 class="text-lg font-extrabold text-ink">探索更多万字级专题与实测榜单</h2>
+          <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <a href="/faq-wiki/" class="card p-4 hover:border-accent transition">
+              <div class="font-mono text-xs font-bold text-accent-ink">MEGA WIKI · 万字百科</div>
+              <div class="mt-1 font-extrabold text-sm text-ink">机场百科与 65+ 深度技术 FAQ →</div>
+              <p class="mt-1 text-xs text-muted">全面拆解 IEPL/IPLC、VLESS/Hysteria2 协议、TUN 模式与流媒体解锁原理。</p>
+            </a>
+            <a href="/runaway-watch/" class="card p-4 hover:border-accent transition">
+              <div class="font-mono text-xs font-bold text-[#F59E0B]">RISK RADAR · 避坑指南</div>
+              <div class="mt-1 font-extrabold text-sm text-ink">机场跑路预警与 10 大红灯自查 →</div>
+              <p class="mt-1 text-xs text-muted">识别灵车促销套路、排查假性失联，查阅 42 家机场最新运营核验状态。</p>
+            </a>
+            <a href="/clients/" class="card p-4 hover:border-accent transition">
+              <div class="font-mono text-xs font-bold text-[#06B6D4]">CLIENT HUB · 6大平台</div>
+              <div class="mt-1 font-extrabold text-sm text-ink">全平台第三方代理客户端下载 →</div>
+              <p class="mt-1 text-xs text-muted">Windows / Mac / 安卓 / iOS / Linux / OpenWrt 软路由完整选型清单。</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <QuoteSection />
+</BaseLayout>
+
+<script>
+  // Copy buttons for rule URLs, Docker commands, and YAML snippets
+  for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-copy-text]")) {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.copyText;
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        const orig = btn.textContent;
+        btn.textContent = "已复制 ✓";
+        setTimeout(() => {
+          btn.textContent = orig;
+        }, 2000);
+      } catch {
+        // Ignore clipboard errors
+      }
+    });
+  }
+
+  // Diagnostic tools category filter
+  const diagBtns = document.querySelectorAll<HTMLButtonElement>("[data-diag-filter]");
+  const diagCards = document.querySelectorAll<HTMLElement>("[data-diag-card]");
+
+  for (const btn of diagBtns) {
+    btn.addEventListener("click", () => {
+      const targetCat = btn.dataset.diagFilter || "all";
+      for (const b of diagBtns) {
+        const active = b === btn;
+        b.classList.toggle("bg-accent", active);
+        b.classList.toggle("text-accent-text", active);
+        b.classList.toggle("bg-surface", !active);
+        b.classList.toggle("text-muted", !active);
+      }
+      for (const card of diagCards) {
+        const cat = card.dataset.diagCat || "";
+        card.hidden = targetCat !== "all" && cat !== targetCat;
+      }
+    });
+  }
+</script>

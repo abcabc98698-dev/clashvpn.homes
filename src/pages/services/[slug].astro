@@ -5,7 +5,9 @@ import PageHeader from "../../components/PageHeader.astro";
 import Icon from "../../components/Icon.astro";
 import ServiceCard from "../../components/ServiceCard.astro";
 import QuoteSection from "../../components/sections/QuoteSection.astro";
+import { FEATURED_BRAND, AFFILIATE_DISCLOSURE } from "../../data/brands";
 import { SITE } from "../../config";
+import { articleJsonLd, faqPageJsonLd } from "../../lib/schema";
 
 export async function getStaticPaths() {
   const services = await getCollection("services");
@@ -22,24 +24,160 @@ const others = (await getCollection("services"))
   .filter((s) => s.id !== service.id)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
+const crumbs = [{ label: "场景专题", href: "/services/" }, { label: title }];
+
+const SERVICE_FAQ_MAP: Record<string, { q: string; a: string }[]> = {
+  "iepl-iplc-line": [
+    {
+      q: "IEPL 物理内网专线与普通 BGP 公网中转在晚高峰（20:00–23:30）有什么本质区别？",
+      a: "普通 BGP 中转的流量仍需经过三大运营商拥堵的公网国际出口与防火墙（GFW），晚高峰丢包率常升至 5%–15%；而 IEPL/IPLC 属于运营商物理二层点对点内网通道，流量从深圳/上海入口直达香港/东京机房，完全不过公网防火墙，因此全天候丢包率低于 0.2%。",
+    },
+    {
+      q: "2026 年哪家 IEPL 专线机场性价比最高且有真实测速图验证？",
+      a: "根据本站 2026-08-11 / 2026-10-19 实测归档，榜首 #1 光速云采用 IEPL 专线 + 企业级内网双架构（VLESS 协议），香港节点实测延迟 22ms、峰值下载 529Mbps，轻量版年付仅 ¥99（折合 ¥8.25/月），常规套餐可使用 8 折优惠码 AMM。",
+    },
+    {
+      q: "如何验证自己购买的机场是不是真 IEPL 专线？",
+      a: "可在每晚 21:00–23:00 高峰期或特殊敏感期，使用 Clash Verge Rev 开启 URL-Test 真延迟测速并播放 YouTube 4K 60fps 视频查看 Stats for Nerds 连接速率；真 IEPL 专线在敏感期不会大面积断连，且晚高峰无断流跳帧。",
+    },
+  ],
+  "ai-chatgpt-unlock": [
+    {
+      q: "为什么开启了香港节点却无法访问 ChatGPT、Claude 或 Google Gemini？",
+      a: "因为 OpenAI、Anthropic（Claude）与 Google Gemini 官方服务均未对中国香港地区开放。请在客户端的 AI 分流策略组中将节点固定切换为美国、日本、新加坡或中国台湾的原生低风险节点。",
+    },
+    {
+      q: "如何防止 Claude 账号被封号或 ChatGPT 遭遇 PoW 降智？",
+      a: "第一，严禁将 AI 流量挂在每几分钟自动跳国家的 URL-Test 测速组上，必须固定使用同一条美/日/新原生节点；第二，开启客户端 Fake-IP 与 DoH 加密 DNS 杜绝 DNS 泄露；第三，开发者使用 Cursor 或终端 CLI 时请开启 TUN 虚拟网卡模式。",
+    },
+    {
+      q: "哪家机场对 ChatGPT 与 Claude 的解锁最稳定？",
+      a: "#1 光速云、#2 飞猫云、#3 微风网络与 #6 星岛梦均在美、日、新、台部署了流媒体与 AI 解锁优化落地，配合本站《免费资源》栏目提供的 AI 专属分流规则集可实现无感稳定调用。",
+    },
+  ],
+  "streaming-4k-unlock": [
+    {
+      q: "为什么能打开 Netflix 网页，却搜不到《绝命毒师》《老友记》等非自制剧？",
+      a: "当节点落地 IP 被 Netflix 识别为普通数据中心机房段时，Netflix 仅展示其拥有全球版权的自制剧（Originals Only），而隐藏第三方版权非自制剧。切换至支持原生 ISP 住宅 IP 或 DNS 内网媒体解锁的专线节点即可恢复完整片库。",
+    },
+    {
+      q: "刷 TikTok 国际版为什么总是黑屏或无网络连接？",
+      a: "TikTok 已退出香港市场，因此香港节点无法刷 TikTok。请在客户端 TikTok 分流组中指定中国台湾、日本、新加坡或美国节点，并确保持有免拔卡重写规则或美区新版客户端。",
+    },
+    {
+      q: "看 YouTube 4K/8K 视频拖动进度条转圈缓冲该怎么解决？",
+      a: "在 Chrome/Edge 地址栏访问 chrome://flags/#enable-quic 将 Experimental QUIC protocol 设为 Disabled，强制视频流走稳定的 TCP HTTP/2 专线通道，即可实现 4K/8K 秒开零缓冲。",
+    },
+  ],
+  "budget-clash-picks": [
+    {
+      q: "每月预算 10 元以内，能买到真正的 IEPL 专线机场吗？",
+      a: "可以。通过选择头部机场的年付入门档折算，#1 光速云轻量版年付 ¥99（折合 ¥8.25/月，69GB/月）、#7 二猫云年付 ¥89（折合 ¥7.42/月，60GB/月）、#5 大佬云年付折合 ¥5.6/月（60GB/月）均采用 IEPL 专线架构。",
+    },
+    {
+      q: "选购平价机场时如何识别“低价高倍率”文字游戏？",
+      a: "下单前务必确认主力节点是否为 1.0x 标准计费倍率。部分劣质机场虽标价 5 元 500GB，但将可用节点设为 5x–10x 倍率，实际可用流量不足 50GB。本站推荐的 #1 光速云、#6 星岛梦、#8 无忧链接、#9 唯兔云均为 1 倍率透明计费。",
+    },
+    {
+      q: "新手第一次买平价机场应该选月付还是年付？",
+      a: "对于经过本站多维实测归档的老牌主力（如 #1 光速云、#2 飞猫云），可直接用优惠码入手高性价比年付小包；对于标注为“待核实”或新上线品牌，强烈建议先买一个月付套餐实测本地晚高峰表现。",
+    },
+  ],
+  "pay-as-you-go-traffic": [
+    {
+      q: "按量付费永久不限时流量包真的不会过期清零吗？",
+      a: "只要机场正常运营，一次性付费的不限时流量包就没有每月账单日清零限制，流量用完为止。非常适合每月流量消耗低于 20GB 的轻度用户，或作为包月主力机场之外的防失联灾备通道。",
+    },
+    {
+      q: "2026 年最值得入手的永久不限时流量包是哪几款？",
+      a: "首推 #1 光速云『致敬斯诺克 147 永久套餐』（一次性 ¥147 获得 247GB 永久不过期 IEPL 双专线流量，单 GB 成本仅 ¥0.59 且不限设备）；其次可搭配 #7 二猫云（¥99/100GB）或 #9 唯兔云（¥100/100GB、¥160/200GB IPLC 永久包）构成异构双保险。",
+    },
+    {
+      q: "如何在 Clash 客户端里让包月主力机场和永久备用包自动无缝切换？",
+      a: "可在 Clash Verge Rev 或 Mihomo 配置中使用 fallback（故障转移）策略组，将包月主力节点排在第一顺位，将永久不限时流量包节点排在第二顺位；平时 100% 消耗包月流量，一旦主力维护超时，0.3 秒内自动切至永久备用包。",
+    },
+  ],
+  "client-setup-guide": [
+    {
+      q: "机场官方自研一键客户端与 Clash Verge Rev 等第三方通用客户端哪个更好？",
+      a: "零基础新手或讨厌折腾订阅链接的用户首选『官方自研一键客户端』（如 #1 光速云、#2 飞猫云，输入账号密码即连）；需要同时管理多家机场、配置 AI 自定义分流或部署软路由的进阶用户首选开源『Clash Verge Rev / Flclash / Shadowrocket』。",
+    },
+    {
+      q: "有没有同时支持自研一键客户端和 Clash 第三方订阅导入的机场？",
+      a: "有。榜首 #1 光速云、#4 暮光加速、#5 大佬云、#7 二猫云均同时提供官方定制客户端与通用订阅链接导入能力，新手老手都能兼顾；而 #2 飞猫云、#8 无忧链接、#10 Firefly 则采用纯专属客户端模式。",
+    },
+    {
+      q: "为什么老版本 Clash for Windows 导入新机场订阅后没有节点？",
+      a: "因为原版 Clash for Windows 已于 2023 年底停更，不支持 VLESS Reality、Hysteria2 和 Shadowsocks-2022 等新加密协议。请前往本站《客户端大全》免费升级至搭载最新 Mihomo 内核的 Clash Verge Rev 或 Flclash。",
+    },
+  ],
+};
+
+const topicFaqs = SERVICE_FAQ_MAP[service.id] ?? SERVICE_FAQ_MAP["iepl-iplc-line"]!;
+const site = Astro.site ?? new URL(SITE.url);
+const extraJsonLd = [
+  articleJsonLd(site, {
+    headline: title,
+    description: summary,
+    urlPath: `/services/${service.id}/`,
+    datePublished: "2026-08-11",
+    dateModified: "2026-10-29",
+  }),
+  faqPageJsonLd(topicFaqs),
+];
 ---
 
-<BaseLayout title={`${title} in ${SITE.address.city}`} description={summary}>
-  <PageHeader title={title} lead={summary} crumbs={[{ label: "Services", href: "/services/" }, { label: title }]} />
+<BaseLayout
+  title={title}
+  description={summary}
+  publishedTime="2026-08-11"
+  modifiedTime="2026-10-29"
+  author={SITE.name}
+  category="场景专题指南"
+  tags={["Clash订阅", "IEPL专线", title]}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
+>
+  <PageHeader title={title} lead={summary} crumbs={crumbs} />
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
       <article class="prose-craft reveal lg:col-span-7">
         <Content />
+
+        <div class="mt-12 border-t border-line pt-10 not-prose">
+          <span class="eyebrow">TOPIC FAQ · 专题权威问答</span>
+          <h2 class="mt-2 text-2xl font-extrabold text-ink">
+            关于「{title}」的高频技术与选型解答
+          </h2>
+          <div class="mt-6 space-y-4">
+            {topicFaqs.map((item, idx) => (
+              <details
+                open={idx === 0}
+                class="group rounded-xl border border-line bg-surface p-5 transition hover:border-accent"
+              >
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-ink">
+                  <span>Q{idx + 1}. {item.q}</span>
+                  <span class="font-mono text-xs text-accent-ink group-open:rotate-180 transition-transform">
+                    ▼
+                  </span>
+                </summary>
+                <p class="mt-3 border-t border-line pt-3 text-sm leading-relaxed text-muted">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
       </article>
-      <aside class="lg:col-span-4 lg:col-start-9" aria-label={`${title} at a glance`}>
+      <aside class="lg:col-span-4 lg:col-start-9" aria-label={`${title} 核心指标与推荐入口`}>
         <div class="card reveal p-7 lg:sticky lg:top-28">
           <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
             {
               priceFrom && (
                 <div>
-                  <dt class="text-sm text-muted">Price</dt>
-                  <dd class="mt-1 text-2xl font-extrabold tracking-tight">From {priceFrom}</dd>
+                  <dt class="text-sm text-muted">参考价格门槛</dt>
+                  <dd class="mt-1 text-2xl font-extrabold tracking-tight text-accent-ink">{priceFrom} 起</dd>
                   {priceNote && <dd class="mt-0.5 text-sm text-muted">{priceNote}</dd>}
                 </div>
               )
@@ -47,7 +185,7 @@ const others = (await getCollection("services"))
             {
               duration && (
                 <div>
-                  <dt class="text-sm text-muted">Timing</dt>
+                  <dt class="text-sm text-muted">实测性能表现</dt>
                   <dd class="mt-1 text-lg font-bold">{duration}</dd>
                 </div>
               )
@@ -56,7 +194,7 @@ const others = (await getCollection("services"))
           {
             included.length > 0 && (
               <>
-                <p class="mt-7 border-t border-line pt-6 text-sm font-bold">Every visit includes</p>
+                <p class="mt-7 border-t border-line pt-6 text-sm font-bold">本专题推荐方案核心特性：</p>
                 <ul class="mt-4 space-y-3">
                   {included.map((item) => (
                     <li class="flex gap-3 text-[0.9375rem]">
@@ -69,10 +207,24 @@ const others = (await getCollection("services"))
             )
           }
           <div class="mt-8 grid gap-3">
-            <a href="#quote" class="btn btn-primary">Get a written price <Icon name="arrow-right" class="icon-shift" /></a>
-            <a href={`tel:${SITE.phone.tel}`} class="btn btn-secondary"><Icon name="phone" /> {SITE.phone.display}</a>
+            <a href={`/brands/${FEATURED_BRAND.slug}/`} class="btn btn-primary">
+              查看 #1 {FEATURED_BRAND.name}实测 <Icon name="arrow-right" class="icon-shift" />
+            </a>
+            {FEATURED_BRAND.registerUrl && (
+              <a
+                href={FEATURED_BRAND.registerUrl}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                class="btn btn-secondary"
+              >
+                前往 {FEATURED_BRAND.name} 官网 (优惠码 AMM) ↗
+              </a>
+            )}
+            <a href="/brands/" class="btn btn-secondary">
+              检索全部 42 家品牌库
+            </a>
           </div>
-          <p class="mt-4 text-xs text-muted">Prices are samples for this demo.</p>
+          <p class="mt-4 text-xs text-muted">* {AFFILIATE_DISCLOSURE}</p>
         </div>
       </aside>
     </div>
@@ -81,8 +233,8 @@ const others = (await getCollection("services"))
   <section class="border-t border-line bg-surface py-20 sm:py-24" aria-labelledby="more-title">
     <div class="container-x">
       <div class="flex items-end justify-between gap-6">
-        <h2 id="more-title" class="h-section reveal text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)]">Other services</h2>
-        <a href="/services/" class="btn btn-secondary reveal hidden sm:inline-flex">All services <Icon name="arrow-right" class="icon-shift" /></a>
+        <h2 id="more-title" class="h-section reveal text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)]">其他相关场景专题</h2>
+        <a href="/services/" class="btn btn-secondary reveal hidden sm:inline-flex">全部专题 <Icon name="arrow-right" class="icon-shift" /></a>
       </div>
       <ul class="stagger mt-10 grid gap-5 md:grid-cols-3">
         {
@@ -96,5 +248,5 @@ const others = (await getCollection("services"))
     </div>
   </section>
 
-  <QuoteSection selected={service.id} title={`Get a written price for ${title.toLowerCase()}`} />
+  <QuoteSection selected={service.id} title={`需要针对「${title}」的定制选型建议？`} />
 </BaseLayout>

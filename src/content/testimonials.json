@@ -1,26 +1,26 @@
 [
   {
-    "id": "burst-pipe",
-    "name": "Dana K.",
-    "location": "Cedar Bluff",
+    "id": "iepl-work",
+    "name": "陈工 · 全栈开发工程师",
+    "location": "深圳 · 电信千兆 / Clash Verge Rev",
     "rating": 5,
-    "quote": "The supply pipe under our kitchen sink split just before midnight. The dispatcher talked me through closing the stop valve and the plumber was here in 40 minutes. He had to come back the next morning to refit the cabinet panel he'd taken off, and didn't charge for the second visit.",
-    "service": "emergency-plumbing"
+    "quote": "平时需要全天候挂着 Cursor、Claude 3.5 和 GitHub 拉代码，之前用的普通直连节点一到晚上 8 点就频繁断流。换了榜首推荐的光速云 IEPL 专线后，广港延迟稳定在 25ms 左右，开了 TUN 模式后命令行和 IDE 再也没报过超时，用 AMM 优惠码买年付才 99 元，性价比很高。",
+    "service": "iepl-iplc-line"
   },
   {
-    "id": "water-heater",
-    "name": "Marcus T.",
-    "location": "Millbrook Heights",
+    "id": "streaming-4k",
+    "name": "林先生 · 家庭影音玩家",
+    "location": "上海 · 联通 500M / Apple TV + OpenClash",
     "rating": 5,
-    "quote": "Our 9-year-old water heater was popping and the water smelled odd. They flushed the tank and replaced the anode rod instead of selling us a new unit. It took an hour longer than quoted because the drain valve was seized, but the price stayed the same.",
-    "service": "water-heaters"
+    "quote": "家里软路由配置了主力肥猫云加光速云 147 元永久流量包做双保险。按照站里的流媒体专题把 Netflix 和 Disney+ 分流到新加坡和台湾专线节点，客厅 Apple TV 4K 看杜比视界基本秒开，全家人手机平板同时连也不受设备数限制。",
+    "service": "streaming-4k-unlock"
   },
   {
-    "id": "slab-leak",
-    "name": "Priya S.",
-    "location": "Fernhollow",
-    "rating": 4,
-    "quote": "They found the slab leak with a thermal camera and cut out one 12-inch square of tile. The matching tile took a week to arrive, so the hole sat under a board for a while. The moisture report they left got our insurance claim approved first time.",
-    "service": "leak-detection"
+    "id": "ai-research",
+    "name": "周同学 · 高校科研与文献检索",
+    "location": "北京 · 校园网 + 移动 / FlClash",
+    "rating": 5,
+    "quote": "对我们学生党来说每个月包月流量根本用不完。参考按量不限时专题入手了光速云 247GB 永久流量包和微风轻量年付，平时查 Google Scholar、用 ChatGPT 改论文完全不心疼月底流量清零，遇到不懂的客户端分流问题查客户端大全几分钟就搞定了。",
+    "service": "pay-as-you-go-traffic"
   }
 ]

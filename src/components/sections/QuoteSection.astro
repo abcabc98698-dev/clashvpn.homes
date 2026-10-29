@@ -1,49 +1,112 @@
 ---
 import { SITE } from "../../config";
+import { FEATURED_BRAND, TOP10_BRANDS, AFFILIATE_DISCLOSURE } from "../../data/brands";
 import Icon from "../Icon.astro";
-import QuoteForm from "../QuoteForm.astro";
 import Highlight from "../Highlight.astro";
 
 interface Props {
   title?: string;
   lead?: string;
-  /** Service id to preselect in the form. */
   selected?: string;
 }
 const {
-  title = "Tell us what's wrong and get a *written price*",
-  lead = "Add your address and, if you can, a photo. During opening hours we reply within an hour with a price range or a time to visit.",
-  selected,
+  title = "告别晚高峰断连，立即启用 *IEPL 物理专线*",
+  lead = "主力推荐「包年 IEPL 专线」配合「按量不限时流量包」双保险策略，全面解锁 ChatGPT / Claude 与 Netflix 4K 超高清流媒体。",
 } = Astro.props;
-const promises = ["Quotes are free", `${SITE.trust.callOut} call-out, taken off the repair`, "2-year guarantee on labor"];
+
+const promises = [
+  "基于 2026-08-11 原始测速档案客观推荐",
+  `#1 光速云年付低至 ${SITE.trust.callOut}（优惠码 AMM）`,
+  "提供 Win / Mac / iOS / 安卓 / 软路由全平台客户端指南",
+];
+
+const top3 = TOP10_BRANDS.slice(0, 3);
 ---
 
 <section id="quote" class="py-16 sm:py-20 lg:py-24" aria-labelledby="quote-title">
   <div class="container-x">
-    <div class="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
+    <div class="grid gap-6 lg:grid-cols-[1fr_1.15fr]">
       <div class="card-accent reveal flex flex-col p-7 sm:p-10 lg:p-12">
         <h2 id="quote-title" class="h-section quote-title"><Highlight text={title} /></h2>
-        <p class="mt-5 text-lg leading-relaxed font-medium opacity-80">{lead}</p>
+        <p class="mt-5 text-base sm:text-lg leading-relaxed font-medium opacity-85">{lead}</p>
         <ul class="mt-8 space-y-3.5">
           {
             promises.map((p) => (
-              <li class="flex items-center gap-3 font-semibold">
+              <li class="flex items-center gap-3 font-semibold text-sm sm:text-base">
                 <Icon name="check" size={20} class="shrink-0" />
-                {p}
+                <span>{p}</span>
               </li>
             ))
           }
         </ul>
-        <div class="mt-auto pt-10">
-          <p class="text-sm font-medium opacity-80">Rather talk it through? The office line is open 7 days.</p>
-          <a href={`tel:${SITE.phone.tel}`} class="btn btn-dark mt-4">
-            <Icon name="phone" />
-            {SITE.phone.display}
+        <div class="mt-auto pt-10 flex flex-wrap gap-3">
+          <a href="/brands/" class="btn btn-dark">
+            浏览全部 42 家品牌库 <Icon name="arrow-right" class="icon-shift" />
+          </a>
+          <a href="/clients/" class="btn btn-dark bg-black/20 hover:bg-black/30">
+            全平台客户端下载
           </a>
         </div>
       </div>
-      <div class="reveal">
-        <QuoteForm selected={selected} />
+
+      <div class="card reveal flex flex-col justify-between p-6 sm:p-8">
+        <div>
+          <div class="flex items-center justify-between gap-2 border-b border-line pb-4">
+            <h3 class="text-lg sm:text-xl font-extrabold tracking-tight text-ink">
+              2026 实测前三甲主力机场速览
+            </h3>
+            <span class="rounded-full bg-accent-soft px-3 py-1 font-mono text-xs font-bold text-accent-ink whitespace-nowrap">
+              2026-08-11 实测认证
+            </span>
+          </div>
+
+          <div class="mt-5 space-y-4">
+            {top3.map((b) => (
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-line bg-surface p-4">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex shrink-0 items-center rounded bg-accent px-2 py-0.5 font-mono text-xs font-extrabold text-accent-text">
+                      #{b.rank}
+                    </span>
+                    <a href={`/brands/${b.slug}/`} class="font-extrabold text-base text-ink hover:text-accent-ink truncate">
+                      {b.name}
+                    </a>
+                    <span class="font-mono text-sm font-bold text-accent-ink whitespace-nowrap">
+                      {b.entryPriceLabel}
+                    </span>
+                  </div>
+                  <p class="mt-1 text-xs text-muted truncate">
+                    {b.lineType} · 代表峰值 {b.speedtest.nodes[0]?.region} {b.speedtest.nodes[0]?.download}
+                    {b.couponCode ? ` · 优惠码 ${b.couponCode}` : ""}
+                  </p>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-2">
+                  <a href={`/brands/${b.slug}/`} class="btn btn-secondary min-h-9 px-3 py-1.5 text-xs">
+                    看评测
+                  </a>
+                  {b.registerUrl && (
+                    <a
+                      href={b.registerUrl}
+                      target="_blank"
+                      rel="nofollow sponsored noopener"
+                      class="btn btn-primary min-h-9 px-3 py-1.5 text-xs"
+                    >
+                      官网 ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-6 border-t border-line pt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+          <span>* {AFFILIATE_DISCLOSURE}</span>
+          <a href={`/brands/${FEATURED_BRAND.slug}/`} class="font-bold text-accent-ink hover:underline whitespace-nowrap">
+            查看 #1 {FEATURED_BRAND.name}完整报告 →
+          </a>
+        </div>
       </div>
     </div>
   </div>

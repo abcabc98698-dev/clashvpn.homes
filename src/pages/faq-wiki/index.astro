@@ -1,0 +1,658 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import QuoteSection from '../../components/sections/QuoteSection.astro';
+import { SITE } from '../../config';
+import { AFFILIATE_DISCLOSURE, getBrandBySlug } from '../../data/brands';
+import {
+  FAQ_CATEGORIES,
+  FAQ_WIKI_ITEMS,
+  LINE_COMPARISON_TABLE,
+  PROTOCOL_COMPARISON_TABLE,
+} from '../../data/faq-wiki';
+
+const lightspeed = getBrandBySlug('guangsuyun')!;
+
+const techArticleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: '机场 FAQ 百科与 Clash 核心技术全书',
+  description:
+    '超万字级机场与科学上网百科全书：涵盖 IEPL/IPLC 物理专线原理、VLESS Reality/Hysteria2/SS-2022 协议对比、Clash Verge Rev/Mihomo Fake-IP 与 TUN 模式排障、ChatGPT/Claude 防封号与 4K 流媒体解锁 60+ 深度问答。',
+  datePublished: '2026-08-11',
+  dateModified: '2026-10-29',
+  author: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  mainEntityOfPage: `${SITE.url}/faq-wiki/`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_WIKI_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: `${item.shortAnswer} ${item.detailedExplanation}`,
+    },
+  })),
+};
+const crumbs = [{ label: '机场FAQ百科' }];
+const extraJsonLd = [techArticleSchema, faqSchema];
+---
+
+<BaseLayout
+  title="机场FAQ百科全书 — IEPL专线原理、VLESS/Hysteria2协议对比、Mihomo排障与AI解锁全指南"
+  description="2026 万字级机场与 Clash 技术百科：深度解答 IEPL 与 IPLC 区别、VLESS Reality 与 Hysteria2 优劣、Clash Verge Rev TUN/Fake-IP 原理、ChatGPT 防降智、Claude 防封号及订阅更新失败急救排错。"
+  publishedTime="2026-08-11"
+  modifiedTime="2026-10-29"
+  author={SITE.name}
+  category="机场FAQ百科全书"
+  tags={["IEPL专线", "VLESS Reality", "Hysteria2", "Mihomo排障", "ChatGPT解锁"]}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
+>
+  <PageHeader
+    title="机场 FAQ 百科与 *Clash 核心技术全书*"
+    lead="从底层拆解 IEPL/IPLC 物理内网专线、六大现代传输协议（VLESS Reality / Trojan / Hysteria2 / SS-2022）、Mihomo 内核 Fake-IP 与 TUN 接管机制，到 ChatGPT 防降智、Claude 防封号及 99% 日常断网急救排错。"
+    crumbs={crumbs}
+  />
+
+  <!-- Top Interactive Control Bar -->
+  <section class="bg-ink-950 border-b border-white/10 py-6 sticky top-20 z-30 backdrop-blur-md">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <!-- Instant Search Input -->
+        <div class="relative flex-1 max-w-xl">
+          <input
+            id="faq-search-input"
+            type="search"
+            placeholder="搜索技术词条或故障现象：如 IEPL、Fake-IP、TUN、ChatGPT降智、Claude、Timeout、Git..."
+            class="w-full rounded-sm border border-white/15 bg-ink-900/90 px-4 py-2.5 pl-10 text-sm text-white placeholder-ink-400 focus:border-accent-500 focus:outline-none"
+          />
+          <svg
+            class="absolute left-3.5 top-3 h-4 w-4 text-ink-400"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </div>
+
+        <!-- Category Quick Filter Pills & Expand/Collapse Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            data-cat-filter="all"
+            class="faq-cat-btn active rounded-sm border border-accent-500 bg-accent-500 px-3 py-1.5 text-xs font-bold text-ink-950 transition cursor-pointer"
+          >
+            全部 ({FAQ_WIKI_ITEMS.length})
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-line"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            线路架构
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-protocol"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            传输协议
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-client"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            客户端内核
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-ai"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            AI与开发者
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-media"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            4K流媒体与游戏
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-billing"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            计费与倍率
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-troubleshoot"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            急救排障
+          </button>
+          <button
+            type="button"
+            data-cat-filter="cat-security"
+            class="faq-cat-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-ink-200 hover:border-accent-500/50 hover:text-white transition cursor-pointer"
+          >
+            隐私防坑
+          </button>
+          <button
+            id="toggle-all-details"
+            type="button"
+            data-expanded="true"
+            class="rounded-sm border border-accent-500/40 bg-accent-500/10 px-2.5 py-1.5 text-xs font-bold text-accent-400 hover:bg-accent-500 hover:text-ink-950 transition cursor-pointer"
+          >
+            折叠全部词条
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Encyclopedia Grid -->
+  <section class="bg-ink-950 text-white py-14">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-10 lg:grid-cols-12">
+        <!-- Left Sticky Sidebar TOC -->
+        <aside class="lg:col-span-3">
+          <div class="sticky top-40 space-y-6">
+            <div class="rounded-sm border border-white/10 bg-ink-900/80 p-5">
+              <p class="font-mono text-xs uppercase tracking-widest text-accent-400">
+                WIKI NAVIGATION · 百科目录
+              </p>
+              <nav class="mt-4 space-y-1.5 text-xs">
+                <a
+                  href="#table-lines"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  📊 表1：五级跨境线路参数横评
+                </a>
+                <a
+                  href="#table-protocols"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  🔐 表2：六大现代代理协议对比
+                </a>
+                <div class="my-2 border-t border-white/10"></div>
+                {FAQ_CATEGORIES.map((cat) => (
+                  <a
+                    href={`#${cat.id}`}
+                    class="block rounded-sm px-2.5 py-2 text-ink-300 hover:bg-white/5 hover:text-accent-400 transition"
+                  >
+                    {cat.title.split('（')[0]}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            <!-- Related Hubs Card -->
+            <div class="rounded-sm border border-accent-500/30 bg-accent-500/10 p-5">
+              <span class="rounded-sm bg-accent-500 px-2 py-0.5 font-mono text-[10px] font-bold text-ink-950">
+                SOLUTIONS MATRIX
+              </span>
+              <h3 class="mt-2.5 font-display text-base font-bold text-white">
+                实测推荐：告别繁琐排障
+              </h3>
+              <p class="mt-1.5 text-xs text-ink-200 leading-relaxed">
+                90% 的断流、掉解锁与晚高峰 Timeout 均源于劣质公网节点。直接一步到位切换至真 IEPL 内网专线：
+              </p>
+              <div class="mt-3 rounded-sm border border-white/10 bg-ink-950/80 p-3 text-xs">
+                <p class="font-bold text-white">#1 {lightspeed.name}</p>
+                <p class="mt-1 text-ink-300">
+                  8 折码 <code class="text-accent-400 font-bold">AMM</code> · 券后 ¥99.2/年（月均 ¥8.25）
+                </p>
+                <p class="mt-0.5 text-emerald-400">原生解锁 ChatGPT / Claude / Netflix 4K</p>
+              </div>
+              <div class="mt-4 flex flex-col gap-2">
+                <a
+                  href="/brands/guangsuyun/"
+                  class="w-full rounded-sm bg-accent-500 px-3 py-2 text-center text-xs font-bold text-ink-950 hover:bg-accent-400 transition"
+                >
+                  查看 #1 光速云 实测详情 →
+                </a>
+                <a
+                  href="/free-resources/"
+                  class="w-full rounded-sm border border-white/15 bg-white/5 px-3 py-2 text-center text-xs font-semibold text-white hover:border-accent-500/50 transition"
+                >
+                  前往「免费资源与分流规则库」
+                </a>
+                <a
+                  href="/runaway-watch/"
+                  class="w-full rounded-sm border border-white/15 bg-white/5 px-3 py-2 text-center text-xs font-semibold text-white hover:border-accent-500/50 transition"
+                >
+                  前往「跑路预警与防失联中心」
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Content Column -->
+        <div class="lg:col-span-9 space-y-14">
+          <!-- Table 1: Line Comparison Table -->
+          <div id="table-lines" class="scroll-mt-36 rounded-sm border border-white/10 bg-ink-900/70 p-6 md:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                PARAMETER MATRIX 01 · 跨境传输链路定级表
+              </span>
+              <span class="rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-xs text-emerald-300">
+                2026 晚高峰实测基准
+              </span>
+            </div>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              五级跨境传输链路实测参数横评表（IEPL vs IPLC vs CN2 GIA vs BGP vs 公网直连）
+            </h2>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              选机场本质上就是选底层物理链路。下表清晰汇总了五种线路在过墙原理、晚高峰（20:00–23:30）丢包率、港澳新日延迟及代表品牌上的核心差距：
+            </p>
+
+            <div class="mt-6 overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-white/15 bg-ink-950/90 text-ink-300 font-mono uppercase">
+                    <th class="py-3.5 px-3">线路等级</th>
+                    <th class="py-3.5 px-3">过境与防火墙机制</th>
+                    <th class="py-3.5 px-3">晚高峰丢包率</th>
+                    <th class="py-3.5 px-3">实测延迟基准</th>
+                    <th class="py-3.5 px-3">常见倍率/价格带</th>
+                    <th class="py-3.5 px-3">代表品牌入口</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                  {LINE_COMPARISON_TABLE.map((row, idx) => (
+                    <tr class={idx < 2 ? 'bg-accent-500/5 hover:bg-white/5 transition' : 'hover:bg-white/5 transition'}>
+                      <td class="py-3.5 px-3 font-bold text-white">
+                        <div>{row.type}</div>
+                        <div class="text-[11px] font-mono text-ink-400 font-normal mt-0.5">{row.fullName}</div>
+                      </td>
+                      <td class="py-3.5 px-3 text-ink-200 leading-relaxed">{row.crossGfwMethod}</td>
+                      <td class="py-3.5 px-3 font-mono font-bold text-emerald-400">{row.eveningPacketLoss}</td>
+                      <td class="py-3.5 px-3 font-mono text-ink-200">{row.latencyHkSg}</td>
+                      <td class="py-3.5 px-3 text-ink-300">
+                        <div>倍率：{row.multiplierRange}</div>
+                        <div class="text-accent-400 mt-0.5">{row.priceTier}</div>
+                      </td>
+                      <td class="py-3.5 px-3">
+                        <div class="flex flex-col gap-1">
+                          {row.repBrands.map((b) => (
+                            <a
+                              href={b.slug ? `/brands/${b.slug}/` : '/brands/'}
+                              class="text-accent-400 hover:underline font-semibold"
+                            >
+                              {b.name} →
+                            </a>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table 2: Protocol Comparison Table -->
+          <div id="table-protocols" class="scroll-mt-36 rounded-sm border border-white/10 bg-ink-900/70 p-6 md:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                PARAMETER MATRIX 02 · 现代传输协议栈对比
+              </span>
+              <span class="rounded-sm border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-xs text-ink-300">
+                Mihomo / Sing-box 全兼容
+              </span>
+            </div>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              六大现代代理传输协议深度参数横评（VLESS Reality / Trojan / Hysteria2 / SS-2022 / TUIC / VMess）
+            </h2>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              不同协议在加密握手次数、UDP 原生转发与抗 DPI 深度包检测能力上各有侧重。建议专线用户首选 <strong class="text-white">SS-2022 / Trojan</strong>（延迟最低），直连或复杂环境首选 <strong class="text-white">VLESS Reality / Hysteria2</strong>：
+            </p>
+
+            <div class="mt-6 overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-white/15 bg-ink-950/90 text-ink-300 font-mono uppercase">
+                    <th class="py-3.5 px-3">协议名称</th>
+                    <th class="py-3.5 px-3">传输层基底</th>
+                    <th class="py-3.5 px-3">加密与伪装特性</th>
+                    <th class="py-3.5 px-3">UDP/游戏支持</th>
+                    <th class="py-3.5 px-3">抗封锁评分</th>
+                    <th class="py-3.5 px-3">黄金适用场景</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                  {PROTOCOL_COMPARISON_TABLE.map((row) => (
+                    <tr class="hover:bg-white/5 transition">
+                      <td class="py-3.5 px-3 font-bold text-white font-mono">{row.protocol}</td>
+                      <td class="py-3.5 px-3 font-mono text-accent-400">{row.transportLayer}</td>
+                      <td class="py-3.5 px-3 text-ink-200 leading-relaxed">{row.encryptionAndStealth}</td>
+                      <td class="py-3.5 px-3 text-emerald-400">{row.udpAndQuicSupport}</td>
+                      <td class="py-3.5 px-3 font-mono text-amber-300">{row.antiBlockingScore}</td>
+                      <td class="py-3.5 px-3 text-ink-300 leading-relaxed">{row.bestScenario}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Search Empty State Notice -->
+          <div
+            id="faq-empty-state"
+            class="hidden rounded-sm border border-white/10 bg-ink-900/60 p-10 text-center"
+          >
+            <p class="font-display text-lg font-bold text-white">未找到匹配的 FAQ 词条</p>
+            <p class="mt-2 text-sm text-ink-300">
+              请尝试更换关键词（如 `IEPL`、`TUN`、`ChatGPT`、`Claude`、`Netflix`、`Timeout`）或点击上方「全部」按钮重置筛选。
+            </p>
+          </div>
+
+          <!-- 8 Categorized Q&A Sections -->
+          {FAQ_CATEGORIES.map((cat) => {
+            const catItems = FAQ_WIKI_ITEMS.filter((item) => item.category === cat.id);
+            return (
+              <div
+                id={cat.id}
+                data-category-section={cat.id}
+                class="faq-category-section scroll-mt-36 rounded-sm border border-white/10 bg-ink-900/50 p-6 md:p-8"
+              >
+                <div class="border-b border-white/10 pb-5">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                      {cat.badge} · 共 {catItems.length} 篇深度解答
+                    </span>
+                    <a
+                      href="#top"
+                      class="font-mono text-xs text-ink-400 hover:text-accent-400 transition"
+                    >
+                      ↑ 返回顶部搜索
+                    </a>
+                  </div>
+                  <h2 class="mt-2 font-display text-2xl font-bold text-white">{cat.title}</h2>
+                  <p class="mt-1 text-sm font-semibold text-accent-300">{cat.subtitle}</p>
+                  <p class="mt-2 text-xs text-ink-300 leading-relaxed">{cat.description}</p>
+                </div>
+
+                <div class="mt-6 space-y-4">
+                  {catItems.map((item, index) => (
+                    <details
+                      id={item.id}
+                      open={index < 3}
+                      data-faq-item
+                      data-category={item.category}
+                      data-search={`${item.question} ${item.shortAnswer} ${item.detailedExplanation} ${item.tags.join(' ')}`.toLowerCase()}
+                      class="faq-item group rounded-sm border border-white/10 bg-ink-950/80 p-5 hover:border-accent-500/40 transition"
+                    >
+                      <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-display text-base font-bold text-white">
+                        <div class="flex items-start gap-3">
+                          <span class="mt-0.5 shrink-0 rounded-sm bg-accent-500/15 border border-accent-500/30 px-2 py-0.5 font-mono text-xs font-bold text-accent-400">
+                            Q{index + 1}
+                          </span>
+                          <span class="leading-snug">{item.question}</span>
+                        </div>
+                        <span class="mt-1 shrink-0 font-mono text-xs text-accent-400 group-open:rotate-180 transition-transform">
+                          ▼
+                        </span>
+                      </summary>
+
+                      <div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm">
+                        <!-- Direct GEO Short Answer Box -->
+                        <div class="rounded-sm border-l-2 border-accent-500 bg-accent-500/10 p-3.5 text-ink-100">
+                          <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-accent-400 block mb-1">
+                            核心结论（TL;DR）：
+                          </span>
+                          <p class="font-medium leading-relaxed">{item.shortAnswer}</p>
+                        </div>
+
+                        <!-- Detailed Technical Explanation -->
+                        <div class="text-ink-200 leading-relaxed space-y-2">
+                          <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-ink-400 block">
+                            底层原理与实操指南：
+                          </span>
+                          <p>{item.detailedExplanation}</p>
+                        </div>
+
+                        {item.commandOrConfig && (
+                          <div class="mt-3 rounded-sm border border-white/10 bg-ink-900 p-3.5">
+                            <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                              <span class="font-mono text-[11px] text-accent-400">配置代码段 / 终端命令</span>
+                              <button
+                                type="button"
+                                data-copy-code={item.commandOrConfig}
+                                class="copy-code-btn rounded-sm bg-white/10 px-2 py-0.5 font-mono text-[11px] text-white hover:bg-accent-500 hover:text-ink-950 transition cursor-pointer"
+                              >
+                                复制代码
+                              </button>
+                            </div>
+                            <pre class="overflow-x-auto font-mono text-xs text-emerald-300 leading-relaxed"><code>{item.commandOrConfig}</code></pre>
+                          </div>
+                        )}
+
+                        <!-- Tags & Related Internal Links -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                          <div class="flex flex-wrap gap-1.5">
+                            {item.tags.map((tag) => (
+                              <span class="rounded-sm border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[11px] text-ink-300">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+
+                          {item.relatedLinks && item.relatedLinks.length > 0 && (
+                            <div class="flex flex-wrap gap-3">
+                              {item.relatedLinks.map((link) => (
+                                <a
+                                  href={link.href}
+                                  class="text-xs font-bold text-accent-400 hover:text-accent-300 hover:underline"
+                                >
+                                  {link.label} →
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          <!-- Internal SEO/GEO Cross-Link Matrix -->
+          <div class="rounded-sm border border-white/10 bg-ink-900/80 p-6 md:p-8">
+            <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+              TOPIC & DIRECTORY MATRIX · 全站核心专题直达
+            </span>
+            <h2 class="mt-2 font-display text-xl font-bold text-white">
+              延伸阅读：实测榜单、免费规则库与防失联中心
+            </h2>
+            <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <a
+                href="/brands/guangsuyun/"
+                class="rounded-sm border border-accent-500/40 bg-accent-500/10 p-4 hover:border-accent-400 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-accent-400">TOP #1 实测标杆</p>
+                <p class="mt-1 font-display text-base font-bold text-white">光速云 (GuangSuYun)</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  全节点真实测速归档 · 优惠码 AMM · 年付 ¥99 · 永久包 ¥147/247GB
+                </p>
+              </a>
+              <a
+                href="/free-resources/"
+                class="rounded-sm border border-white/10 bg-ink-950/70 p-4 hover:border-accent-500/50 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-emerald-400">FREE RESOURCES</p>
+                <p class="mt-1 font-display text-base font-bold text-white">免费资源与分流规则中心</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  Loyalsoldier/ACL4SSR 规则集、Mihomo 防泄漏配置、一键测速脚本与美区 Apple ID 教程
+                </p>
+              </a>
+              <a
+                href="/runaway-watch/"
+                class="rounded-sm border border-white/10 bg-ink-950/70 p-4 hover:border-accent-500/50 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-amber-400">RISK OBSERVATORY</p>
+                <p class="mt-1 font-display text-base font-bold text-white">机场跑路预警与防失联中心</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  10项跑路高危征兆自测计算器、42家品牌运营状态监控表与主备双保险架构
+                </p>
+              </a>
+              <a
+                href="/services/ai-chatgpt-unlock/"
+                class="rounded-sm border border-white/10 bg-ink-950/70 p-4 hover:border-accent-500/50 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-accent-400">AI & STREAMING</p>
+                <p class="mt-1 font-display text-base font-bold text-white">AI大模型与4K流媒体解锁专题</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  ChatGPT 满血防降智、Claude 原生住宅落地与 Netflix 非自制剧解锁推荐
+                </p>
+              </a>
+              <a
+                href="/clients/"
+                class="rounded-sm border border-white/10 bg-ink-950/70 p-4 hover:border-accent-500/50 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-accent-400">CLIENT HUB</p>
+                <p class="mt-1 font-display text-base font-bold text-white">6大平台客户端下载与内核横评</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  Clash Verge Rev、Flclash、Shadowrocket、Stash 与 Sing-box 官方安全源
+                </p>
+              </a>
+              <a
+                href="/brands/"
+                class="rounded-sm border border-white/10 bg-ink-950/70 p-4 hover:border-accent-500/50 transition block"
+              >
+                <p class="font-mono text-xs font-bold text-accent-400">42 BRANDS INDEX</p>
+                <p class="mt-1 font-display text-base font-bold text-white">42家机场品牌全景评测目录</p>
+                <p class="mt-1 text-xs text-ink-300">
+                  支持按 IEPL/IPLC 专线、不限时流量包、原生解锁及数据核验状态实时筛选
+                </p>
+              </a>
+            </div>
+            <p class="mt-4 font-mono text-[11px] text-ink-400">
+              * 合规声明：{AFFILIATE_DISCLOSURE}。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <QuoteSection />
+
+  <script>
+    const searchInput = document.getElementById('faq-search-input') as HTMLInputElement | null;
+    const catButtons = document.querySelectorAll<HTMLButtonElement>('.faq-cat-btn');
+    const faqItems = document.querySelectorAll<HTMLDetailsElement>('[data-faq-item]');
+    const catSections = document.querySelectorAll<HTMLElement>('[data-category-section]');
+    const emptyState = document.getElementById('faq-empty-state');
+    const toggleAllBtn = document.getElementById('toggle-all-details') as HTMLButtonElement | null;
+    const copyBtns = document.querySelectorAll<HTMLButtonElement>('.copy-code-btn');
+
+    let currentCategory = 'all';
+
+    function filterFaq() {
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      let visibleCount = 0;
+
+      faqItems.forEach((item) => {
+        const itemCat = item.getAttribute('data-category') || '';
+        const searchStr = item.getAttribute('data-search') || '';
+        const matchesCat = currentCategory === 'all' || itemCat === currentCategory;
+        const matchesQuery = !query || searchStr.includes(query);
+
+        if (matchesCat && matchesQuery) {
+          item.classList.remove('hidden');
+          if (query) {
+            item.open = true;
+          }
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      catSections.forEach((sec) => {
+        const secId = sec.getAttribute('data-category-section') || '';
+        const hasVisible = sec.querySelectorAll('[data-faq-item]:not(.hidden)').length > 0;
+        const matchesCat = currentCategory === 'all' || secId === currentCategory;
+        if (matchesCat && hasVisible) {
+          sec.classList.remove('hidden');
+        } else {
+          sec.classList.add('hidden');
+        }
+      });
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+    }
+
+    searchInput?.addEventListener('input', filterFaq);
+
+    catButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentCategory = btn.getAttribute('data-cat-filter') || 'all';
+        catButtons.forEach((b) => {
+          b.classList.remove('border-accent-500', 'bg-accent-500', 'text-ink-950', 'font-bold');
+          b.classList.add('border-white/10', 'bg-white/5', 'text-ink-200');
+        });
+        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink-200');
+        btn.classList.add('border-accent-500', 'bg-accent-500', 'text-ink-950', 'font-bold');
+        filterFaq();
+      });
+    });
+
+    toggleAllBtn?.addEventListener('click', () => {
+      const isExpanded = toggleAllBtn.getAttribute('data-expanded') === 'true';
+      const nextState = !isExpanded;
+      faqItems.forEach((item) => {
+        if (!item.classList.contains('hidden')) {
+          item.open = nextState;
+        }
+      });
+      toggleAllBtn.setAttribute('data-expanded', String(nextState));
+      toggleAllBtn.textContent = nextState ? '折叠全部词条' : '展开全部词条';
+    });
+
+    copyBtns.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const code = btn.getAttribute('data-copy-code') || '';
+        try {
+          await navigator.clipboard.writeText(code);
+          const original = btn.textContent;
+          btn.textContent = '✓ 已复制';
+          setTimeout(() => {
+            btn.textContent = original;
+          }, 1800);
+        } catch {
+          // fallback ignored
+        }
+      });
+    });
+  </script>
+</BaseLayout>

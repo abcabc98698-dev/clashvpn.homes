@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import { SITE } from "../../config";
 import Icon from "../Icon.astro";
 import SectionHeading from "../SectionHeading.astro";
 
@@ -10,13 +9,14 @@ const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.o
 <section class="section" aria-labelledby="faq-title">
   <div class="container-x grid gap-12 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-5">
-      <SectionHeading id="faq-title" title="Price, timing and *the guarantee*" />
+      <SectionHeading id="faq-title" title="价格、专线原理与 *防跑路指南*" />
       <div class="card-accent reveal mt-10 p-7 sm:p-8">
-        <p class="text-xl font-semibold">Something not covered here?</p>
-        <p class="mt-2 font-medium opacity-80">Call the office. A plumber or our dispatcher picks up, 7 days a week.</p>
-        <a href={`tel:${SITE.phone.tel}`} class="btn btn-dark mt-6">
-          <Icon name="phone" />
-          {SITE.phone.display}
+        <p class="text-xl font-semibold">想按线路或预算快速筛选？</p>
+        <p class="mt-2 font-medium opacity-85">
+          前往全网 42 家机场检索库，支持按 IEPL/IPLC 专线、客户端类型与月均价格一键筛选对比。
+        </p>
+        <a href="/brands/" class="btn btn-dark mt-6">
+          检索 42 家品牌库 <Icon name="arrow-right" class="icon-shift" />
         </a>
       </div>
     </div>
@@ -51,8 +51,8 @@ const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.o
     justify-content: space-between;
     gap: 1.5rem;
     padding: 1.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: 1.15rem;
+    font-weight: 600;
     letter-spacing: -0.01em;
     cursor: pointer;
     list-style: none;
@@ -84,8 +84,8 @@ const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.o
     max-width: 40rem;
     padding-bottom: 1.5rem;
     margin-top: -0.25rem;
-    font-size: 1.0625rem;
-    line-height: 1.7;
+    font-size: 1.02rem;
+    line-height: 1.75;
     color: var(--c-muted);
   }
 </style>

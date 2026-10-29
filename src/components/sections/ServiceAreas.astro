@@ -23,8 +23,8 @@ const [home, ...others] = pins;
     <div>
       <SectionHeading
         id="areas-title"
-        title={`${SITE.address.city} and the *towns around it*`}
-        lead="Our vans park overnight in Fernhollow, Cedar Bluff and Quarry Hill, so most addresses on this list are within 30 minutes of one."
+        title={`以 ${SITE.address.city} 为枢纽的 *全球高速落地节点*`}
+        lead="主力专线机场通过广港、沪日、沪美内网物理专线及多线 BGP 入口，实现亚太与欧美核心数据中心毫秒级互联与原生流媒体解锁。"
       />
       <ul class="stagger mt-8 flex flex-wrap gap-2.5">
         {
@@ -37,7 +37,7 @@ const [home, ...others] = pins;
         }
       </ul>
       <p class="reveal mt-8 text-muted">
-        Outside these towns, <a href={`tel:${SITE.phone.tel}`} class="font-bold text-accent-ink underline underline-offset-4">call {SITE.phone.display}</a>. If you're too far for us, we'll name a plumber who is closer.
+        需要特定冷门地区（如土耳其、阿根廷、印度、南美）节点？欢迎前往 <a href="/brands/" class="font-bold text-accent-ink underline underline-offset-4">42 家品牌库按节点筛选</a> 或提交选型咨询。
       </p>
     </div>
 
@@ -106,7 +106,7 @@ const [home, ...others] = pins;
   }
   .map-label {
     fill: var(--c-ink);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     paint-order: stroke;
     stroke: var(--c-surface);
@@ -114,7 +114,7 @@ const [home, ...others] = pins;
     stroke-linejoin: round;
   }
   .map-label-home {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
   }
 </style>

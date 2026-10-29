@@ -9,36 +9,36 @@ import { SITE } from "../../config";
 const t = SITE.trust;
 const [ratingInt, ratingDec] = String(t.rating).split(".").map(Number);
 const stats = [
-  { kind: "int", a: t.years, b: 0, suffix: "", label: `years fixing pipes in ${SITE.address.city}`, text: `${t.years}` },
-  { kind: "int", a: Math.round(t.jobs / 1000), b: 0, suffix: "k+", label: "jobs finished", text: `${Math.round(t.jobs / 1000)}k+` },
-  { kind: "dec", a: ratingInt, b: ratingDec ?? 0, suffix: "", label: `average rating from ${t.reviewCount}+ reviews`, text: `${t.rating}` },
-  { kind: "int", a: t.responseMinutes, b: 0, suffix: " min", label: "typical emergency arrival", text: `${t.responseMinutes} min` },
+  { kind: "int", a: t.years, b: 0, suffix: "家", label: "全库归档与分类机场品牌", text: `${t.years}家` },
+  { kind: "int", a: 16, b: 0, suffix: "份", label: "2026-08-11 原始测速截图留档", text: "16份" },
+  { kind: "dec", a: ratingInt, b: ratingDec ?? 0, suffix: "", label: `基于 ${t.reviewCount}+ 条实测样本综合评分`, text: `${t.rating}` },
+  { kind: "int", a: t.responseMinutes, b: 0, suffix: " ms", label: `${SITE.address.city} IEPL 专线典型延迟`, text: `${t.responseMinutes} ms` },
 ];
 ---
 
-<section class="section pt-16 sm:pt-20" aria-labelledby="stats-title">
+<section class="section pt-14 sm:pt-18" aria-labelledby="stats-title">
   <div class="container-x">
-    <h2 id="stats-title" class="reveal text-xl font-normal text-muted sm:text-2xl">
-      Licensed, insured and <span class="hl">local</span>. The numbers so far:
+    <h2 id="stats-title" class="reveal text-lg font-semibold text-muted sm:text-xl">
+      真实采样、状态分级与 <span class="hl">透明横向对比</span>。当前观测库核心指标：
     </h2>
-    <span class="rule mt-6" aria-hidden="true"></span>
-    <ul class="stagger mt-12 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4 lg:gap-x-10">
+    <span class="rule mt-5" aria-hidden="true"></span>
+    <ul class="stagger mt-10 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4 lg:gap-x-10">
       {
         stats.map((s, i) => (
-          <li class="border-t border-line pt-6" style={`--i:${i}`}>
+          <li class="border-t border-line pt-5" style={`--i:${i}`}>
             <span class="sr-only">
               {s.text} {s.label}
             </span>
             <span class="stat-num" aria-hidden="true">
               <span class:list={["stat-count", s.kind === "dec" && "stat-dec"]} style={`--to-a:${s.a};--to-b:${s.b}`} data-suffix={s.suffix} />
             </span>
-            <span class="mt-2 block text-[0.98rem] text-muted" aria-hidden="true">{s.label}</span>
+            <span class="mt-2.5 block text-sm sm:text-[0.95rem] font-medium text-muted" aria-hidden="true">{s.label}</span>
           </li>
         ))
       }
     </ul>
-    <p class="mt-10 text-sm text-muted">
-      State license {t.license}. {t.note}
+    <p class="mt-8 text-xs sm:text-sm text-muted">
+      观测档案编号 {t.license}。{t.note ? ` ${t.note}` : ""}
     </p>
   </div>
 </section>
@@ -56,12 +56,13 @@ const stats = [
   }
   .stat-num {
     display: block;
-    font-size: clamp(3rem, 2rem + 4vw, 5.25rem);
-    font-weight: 300;
-    line-height: 1;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.35rem, 1.7rem + 2.8vw, 4rem);
+    font-weight: 750;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
     color: var(--accent-ink);
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
   .stat-count {
     --a: var(--to-a);

@@ -1,5 +1,5 @@
 ---
-/** The brand mark. Replace this SVG with your own logo (keep width/height for a stable header). */
+/** Brand emblem mark (40×40 vector icon). */
 interface Props {
   class?: string;
 }
@@ -7,9 +7,9 @@ const { class: className } = Astro.props;
 ---
 
 <svg viewBox="0 0 40 40" width="40" height="40" class:list={["shrink-0", className]} aria-hidden="true" focusable="false">
-  <rect width="40" height="40" rx="11" fill="var(--accent)"></rect>
-  <path d="M9.5 19.5 20 11l10.5 8.5" fill="none" stroke="var(--accent-text)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect width="40" height="40" rx="10" fill="var(--accent)"></rect>
+  <path d="M9 19.5 20 10.5l11 9" fill="none" stroke="var(--accent-text)" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"></path>
   <path
-    d="M20 17.2c2.6 3 4.3 5.1 4.3 7.2a4.3 4.3 0 0 1-8.6 0c0-2.1 1.7-4.2 4.3-7.2z"
+    d="M20 16.8c2.7 3.1 4.4 5.2 4.4 7.4a4.4 4.4 0 0 1-8.8 0c0-2.2 1.7-4.3 4.4-7.4z"
     fill="var(--accent-text)"></path>
 </svg>

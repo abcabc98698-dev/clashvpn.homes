@@ -6,21 +6,119 @@ import ServiceCard from "../../components/ServiceCard.astro";
 import HowItWorks from "../../components/sections/HowItWorks.astro";
 import QuoteSection from "../../components/sections/QuoteSection.astro";
 import { SITE } from "../../config";
+import { collectionPageJsonLd, itemListJsonLd } from "../../lib/schema";
 
+const site = Astro.site ?? new URL(SITE.url);
 const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ label: "场景专题" }];
+const pageTitle =
+  "2026 机场订阅与跨境加速六大场景专题：IEPL专线、AI解锁、4K流媒体、平价与永久流量包";
+const pageDesc = `围绕 ${SITE.address.city} IEPL/IPLC 物理专线、ChatGPT/Claude 稳定解锁、Netflix/Disney+ 4K 观影、5.6元起平价订阅、按量不限时流量包与客户端选型提供深度专题指南。`;
+
+const extraJsonLd = [
+  collectionPageJsonLd(site, {
+    name: pageTitle,
+    description: pageDesc,
+    urlPath: "/services/",
+  }),
+  itemListJsonLd(
+    site,
+    "跨境网络与 Clash 订阅六大核心场景专题",
+    services.map((s, idx) => ({
+      rank: idx + 1,
+      name: s.data.title,
+      urlPath: `/services/${s.id}/`,
+      description: s.data.summary,
+    }))
+  ),
+];
 ---
 
 <BaseLayout
-  title="Services"
-  description={`Emergency plumbing, leak detection, drain cleaning, water heaters, boilers and fixtures in ${SITE.address.city}. Written price before work starts, two-year labor guarantee.`}
+  title={pageTitle}
+  description={pageDesc}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
 >
   <PageHeader
-    title="Plumbing and heating *services*"
-    lead="Six kinds of work cover almost every call we get. Each page lists what a visit includes and a typical starting price."
-    crumbs={[{ label: "Services" }]}
+    title="跨境网络与订阅 *六大核心专题*"
+    lead="无论您是寻找晚高峰不掉速的 IEPL 物理专线、需要稳定解锁 ChatGPT/Claude 与 4K 流媒体，还是寻找不限时永久流量包，都能在对应专题找到实测推荐。"
+    crumbs={crumbs}
   />
-  <section class="section" aria-label="All services">
+  <section class="section" aria-label="全部场景专题">
     <div class="container-x">
+      <!-- Three 10,000+ Character Flagship Mega-Hubs Banner -->
+      <div class="mb-12 rounded-2xl border border-line bg-surface-2 p-6 sm:p-8">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="eyebrow">FLAGSHIP MEGA-HUBS · 三大万字级深度百科矩阵</span>
+          <span class="font-mono text-xs text-muted">2026 权威实测与开源防坑指南</span>
+        </div>
+        <h2 class="mt-2 text-2xl font-extrabold text-ink">
+          全网核心资源、技术百科与跑路风险监测中心
+        </h2>
+        <div class="mt-6 grid gap-5 lg:grid-cols-3">
+          <a
+            href="/free-resources/"
+            class="card group p-5 transition hover:border-accent flex flex-col justify-between"
+          >
+            <div>
+              <span class="inline-block rounded bg-accent/15 px-2.5 py-0.5 font-mono text-xs font-bold text-accent-ink">
+                MEGA-HUB 01 · 免费资源
+              </span>
+              <h3 class="mt-3 text-lg font-extrabold text-ink group-hover:text-accent-ink transition">
+                免费资源与开源规则中心
+              </h3>
+              <p class="mt-2 text-sm text-muted leading-relaxed">
+                Loyalsoldier / ACL4SSR / blackmatrix7 分流规则集、Sub-Store 防泄密指南、IP 欺诈分自检矩阵、Mihomo DoH 模板与美区 Apple ID 零成本教程。
+              </p>
+            </div>
+            <span class="mt-4 inline-flex items-center text-xs font-bold text-accent-ink">
+              进入免费资源矩阵 →
+            </span>
+          </a>
+
+          <a
+            href="/faq-wiki/"
+            class="card group p-5 transition hover:border-accent flex flex-col justify-between"
+          >
+            <div>
+              <span class="inline-block rounded bg-accent/15 px-2.5 py-0.5 font-mono text-xs font-bold text-accent-ink">
+                MEGA-HUB 02 · 机场FAQ百科
+              </span>
+              <h3 class="mt-3 text-lg font-extrabold text-ink group-hover:text-accent-ink transition">
+                机场 FAQ 百科与 Clash 技术全书
+              </h3>
+              <p class="mt-2 text-sm text-muted leading-relaxed">
+                涵盖 IEPL vs IPLC 线路横评表、VLESS Reality / Hysteria2 / SS-2022 协议对比、TUN/Fake-IP 原理、ChatGPT 防降智、Claude 防封号与 60+ 急救排障。
+              </p>
+            </div>
+            <span class="mt-4 inline-flex items-center text-xs font-bold text-accent-ink">
+              查阅 60+ 技术问答全书 →
+            </span>
+          </a>
+
+          <a
+            href="/runaway-watch/"
+            class="card group p-5 transition hover:border-accent flex flex-col justify-between"
+          >
+            <div>
+              <span class="inline-block rounded bg-accent/15 px-2.5 py-0.5 font-mono text-xs font-bold text-accent-ink">
+                MEGA-HUB 03 · 跑路预警
+              </span>
+              <h3 class="mt-3 text-lg font-extrabold text-ink group-hover:text-accent-ink transition">
+                机场跑路预警与防失联监控中心
+              </h3>
+              <p class="mt-2 text-sm text-muted leading-relaxed">
+                内置 10 项高危跑路信号实时评分计算器、假失联 vs 真跑路 6 步自检急救流、42 家机场运营状态监控总表与「IEPL主力+永久包」双保险架构。
+              </p>
+            </div>
+            <span class="mt-4 inline-flex items-center text-xs font-bold text-accent-ink">
+              开启跑路风险自测 →
+            </span>
+          </a>
+        </div>
+      </div>
+
       <ul class="stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
           services.map((service, i) => (

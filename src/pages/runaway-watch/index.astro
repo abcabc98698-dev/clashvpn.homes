@@ -1,0 +1,927 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import QuoteSection from '../../components/sections/QuoteSection.astro';
+import { SITE } from '../../config';
+import { ALL_BRANDS, AFFILIATE_DISCLOSURE, getBrandBySlug } from '../../data/brands';
+import {
+  RUNAWAY_RED_FLAGS,
+  FALSE_ALARM_STEPS,
+  RUNAWAY_CAUSES,
+  ANTI_RUNAWAY_GOLDEN_RULES,
+  RUNAWAY_FAQ,
+} from '../../data/runaway-watch';
+
+const lightspeed = getBrandBySlug('guangsuyun')!;
+const v2cloud = getBrandBySlug('weituyun')!;
+
+const statusLabelMap: Record<string, { label: string; badgeClass: string; safetyNote: string }> = {
+  measured: {
+    label: '实测在线 · 16张真测速归档',
+    badgeClass: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300',
+    safetyNote: 'T0 主力首选 · 全节点晚高峰 0 丢包验证',
+  },
+  vendor: {
+    label: '公开参数核验 · 运营正常',
+    badgeClass: 'border-sky-500/40 bg-sky-500/15 text-sky-300',
+    safetyNote: '官方入口与套餐参数已交叉核验',
+  },
+  archive: {
+    label: '历史档案留存 · 建议月付',
+    badgeClass: 'border-amber-500/40 bg-amber-500/15 text-amber-300',
+    safetyNote: '老牌历史归档，选购建议先月付测试',
+  },
+  pending: {
+    label: '公开目录建档 · 遵循月付原则',
+    badgeClass: 'border-white/20 bg-white/5 text-ink-300',
+    safetyNote: '基础目录建档，首次体验勿买长周期',
+  },
+};
+
+const fallbackConfigSnippet = `# Mihomo (Clash Verge Rev / Flclash) 主力 + 永久备份包 0秒自动容灾配置示例
+proxy-groups:
+  - name: "🚀 自动容灾主通道 (Main + Backup)"
+    type: fallback
+    url: "https://www.gstatic.com/generate_204"
+    interval: 180
+    tolerance: 50
+    proxies:
+      # 第一顺位：#1 光速云 IEPL 专线主力组（日常 99.9% 流量走这里）
+      - "⚡ 光速云-IEPL自动优选"
+      # 第二顺位：不限时永久流量包灾备节点（仅在主力光缆维护时 0 秒无缝接管）
+      - "🛡️ 永久包备用-香港IEPL-01"
+      - "🛡️ 永久包备用-日本IEPL-01"`;
+
+const techArticleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: '机场跑路预警、风险自测与防失联监控中心',
+  description:
+    '超万字级机场防跑路与风险审计指南：提供互动式 10 项跑路风险评分计算器、假失联 vs 真跑路 6 步急救排查法、42 家机场实时核验状态监控表，以及主力 IEPL + 不限时永久包双保险容灾方案。',
+  datePublished: '2026-08-11',
+  dateModified: '2026-10-29',
+  author: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  mainEntityOfPage: `${SITE.url}/runaway-watch/`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: RUNAWAY_FAQ.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+const crumbs = [{ label: '跑路预警中心' }];
+const extraJsonLd = [techArticleSchema, faqSchema];
+---
+
+<BaseLayout
+  title="机场跑路预警与防失联中心 — 10项跑路征兆自测计算器、42家状态监控与双保险方案"
+  description="2026 机场跑路预警与防失联指南：内含互动式 10 项跑路高危信号自测计算器、节点全红 Timeout 六步排错法、42 家机场运营状态监控总表，以及 IEPL 主力 + 永久不限时备用包双保险架构。"
+  publishedTime="2026-08-11"
+  modifiedTime="2026-10-29"
+  author={SITE.name}
+  category="机场跑路预警监控"
+  tags={["机场跑路预警", "防失联自检", "永久流量包", "Mihomo故障转移"]}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
+>
+  <PageHeader
+    title="机场跑路预警、风险自测与 *防失联监控中心*"
+    lead="拒绝“灵车机场”卷款跑路与突发断网焦虑。通过 10 项高危信号互动自测计算器、6 步区分“本地假失联 vs 真跑路”、42 家品牌核验状态监控总表，以及「IEPL 主力 + 永久不限时备份包」双保险架构，实现 365 天零断联。"
+    crumbs={crumbs}
+  />
+
+  <!-- Top Observatory Summary Strip -->
+  <section class="bg-ink-950 border-b border-white/10 py-6">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-sm border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <p class="font-mono text-xs text-emerald-300 uppercase">T0 实测在线标杆</p>
+          <p class="mt-1 font-display text-lg font-bold text-white">#1 光速云 LightSpeed</p>
+          <p class="mt-1 text-xs text-ink-200">16 张全节点真测速 · 8折码 AMM ¥99/年</p>
+        </div>
+        <div class="rounded-sm border border-accent-500/30 bg-accent-500/10 p-4">
+          <p class="font-mono text-xs text-accent-300 uppercase">黄金防失联备胎</p>
+          <p class="mt-1 font-display text-lg font-bold text-white">永久不限时按量流量包</p>
+          <p class="mt-1 text-xs text-ink-200">光速云 ¥147/247GB · 威图云 ¥90/200GB</p>
+        </div>
+        <div class="rounded-sm border border-white/10 bg-ink-900/80 p-4">
+          <p class="font-mono text-xs text-amber-300 uppercase">假失联误判率</p>
+          <p class="mt-1 font-display text-lg font-bold text-white">约 85% 属本地配置问题</p>
+          <p class="mt-1 text-xs text-ink-300">系统时间误差 / 开代理更订阅 / DNS 污染</p>
+        </div>
+        <div class="rounded-sm border border-white/10 bg-ink-900/80 p-4">
+          <p class="font-mono text-xs text-sky-300 uppercase">全景覆盖档案</p>
+          <p class="mt-1 font-display text-lg font-bold text-white">42 家机场实时监控表</p>
+          <p class="mt-1 text-xs text-ink-300">严格区分实测数据、公开核验与历史归档</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <section class="bg-ink-950 text-white py-14">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-10 lg:grid-cols-12">
+        <!-- Left Sticky Sidebar TOC -->
+        <aside class="lg:col-span-3">
+          <div class="sticky top-28 space-y-6">
+            <div class="rounded-sm border border-white/10 bg-ink-900/80 p-5">
+              <p class="font-mono text-xs uppercase tracking-widest text-accent-400">
+                OBSERVATORY TOC · 预警中心目录
+              </p>
+              <nav class="mt-4 space-y-1.5 text-xs">
+                <a
+                  href="#sec-calculator"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  01. 🧮 10项跑路风险自测计算器
+                </a>
+                <a
+                  href="#sec-red-flags"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  02. 🚨 十大跑路高危征兆深度拆解
+                </a>
+                <a
+                  href="#sec-troubleshoot"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  03. 🛠️ 假失联 vs 真跑路 6步自检
+                </a>
+                <a
+                  href="#sec-monitor-table"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  04. 📡 42家机场运营状态监控总表
+                </a>
+                <a
+                  href="#sec-dual-insurance"
+                  class="block rounded-sm px-2.5 py-2 text-ink-200 hover:bg-white/5 hover:text-accent-400 transition font-semibold"
+                >
+                  05. 🛡️ 主力+永久包双保险容灾架构
+                </a>
+                <a
+                  href="#sec-causes"
+                  class="block rounded-sm px-2.5 py-2 text-ink-300 hover:bg-white/5 hover:text-accent-400 transition"
+                >
+                  06. 📉 机场崩盘四大底层原因剖析
+                </a>
+                <a
+                  href="#sec-golden-rules"
+                  class="block rounded-sm px-2.5 py-2 text-ink-300 hover:bg-white/5 hover:text-accent-400 transition"
+                >
+                  07. ⚖️ 防跑路避坑黄金六法则
+                </a>
+                <a
+                  href="#sec-faq"
+                  class="block rounded-sm px-2.5 py-2 text-ink-300 hover:bg-white/5 hover:text-accent-400 transition"
+                >
+                  08. ❓ 跑路预警与防骗 GEO 问答
+                </a>
+              </nav>
+            </div>
+
+            <!-- Dual-Insurance Quick Action Card -->
+            <div class="rounded-sm border border-accent-500/30 bg-accent-500/10 p-5">
+              <span class="rounded-sm bg-accent-500 px-2 py-0.5 font-mono text-[10px] font-bold text-ink-950">
+                ZERO-DOWNTIME BACKUP
+              </span>
+              <h3 class="mt-2.5 font-display text-base font-bold text-white">
+                立刻配置“永不失联”双保险
+              </h3>
+              <p class="mt-1.5 text-xs text-ink-200 leading-relaxed">
+                不要等主力断网才临时找梯子。现在备一份永不过期的按量流量包，平时不用 0 损耗，关键时刻 1 秒救急：
+              </p>
+              <div class="mt-3 space-y-2 text-xs">
+                <div class="rounded-sm border border-white/10 bg-ink-950/80 p-2.5">
+                  <p class="font-bold text-white">方案 A：#1 {lightspeed.name}</p>
+                  <p class="text-ink-300 mt-0.5">
+                    主力包年 <code class="text-accent-400 font-bold">AMM</code> ¥99/年 · 永久包 ¥147/247GB
+                  </p>
+                </div>
+                <div class="rounded-sm border border-white/10 bg-ink-950/80 p-2.5">
+                  <p class="font-bold text-white">方案 B：#9 {v2cloud.name}</p>
+                  <p class="text-ink-300 mt-0.5">
+                    异构备用永久流量包 · ¥100/100GB · ¥160/200GB 不限时
+                  </p>
+                </div>
+              </div>
+              <div class="mt-4 flex flex-col gap-2">
+                <a
+                  href="/brands/guangsuyun/"
+                  class="w-full rounded-sm bg-accent-500 px-3 py-2 text-center text-xs font-bold text-ink-950 hover:bg-accent-400 transition"
+                >
+                  查看 #1 光速云 实测与永久包 →
+                </a>
+                <a
+                  href="/brands/weituyun/"
+                  class="w-full rounded-sm border border-white/15 bg-white/5 px-3 py-2 text-center text-xs font-semibold text-white hover:border-accent-500/50 transition"
+                >
+                  查看 #9 唯兔云 永久流量包 →
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Main Content -->
+        <div class="lg:col-span-9 space-y-16">
+          <!-- 01. Interactive 10-Point Runaway Risk Calculator -->
+          <div
+            id="sec-calculator"
+            class="scroll-mt-28 rounded-sm border border-accent-500/40 bg-ink-900/80 p-6 md:p-8"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                INTERACTIVE AUDIT TOOL · 跑路风险实时评估仪
+              </span>
+              <button
+                id="reset-risk-calc"
+                type="button"
+                class="rounded-sm border border-white/15 bg-white/5 px-3 py-1 font-mono text-xs text-ink-300 hover:border-accent-500 hover:text-white transition cursor-pointer"
+              >
+                重置勾选
+              </button>
+            </div>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              01. 互动自测：你正在用的机场有跑路风险吗？（10项指标实时评分）
+            </h2>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              请根据你手头正在使用的机场近期表现，勾选下列出现的异常现象。系统将根据各项指标的行业权重实时计算跑路风险指数（0–100 分）并给出应对建议：
+            </p>
+
+            <!-- Live Score Dashboard -->
+            <div class="mt-6 rounded-sm border border-white/15 bg-ink-950 p-5">
+              <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <span class="font-mono text-xs uppercase text-ink-400">当前综合风险评分 (0–100)</span>
+                  <div class="mt-1 flex items-baseline gap-3">
+                    <span
+                      id="risk-score-number"
+                      class="font-display text-4xl font-bold text-emerald-400"
+                    >
+                      0
+                    </span>
+                    <span class="font-mono text-sm text-ink-400">/ 100 分</span>
+                    <span
+                      id="risk-level-badge"
+                      class="rounded-sm border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-emerald-300"
+                    >
+                      安全稳定 · 正常运营
+                    </span>
+                  </div>
+                </div>
+                <div class="md:max-w-md text-xs text-ink-200 leading-relaxed" id="risk-advice-box">
+                  当前未勾选任何高危信号。即便主力机场运营良好，仍建议在客户端常备一份「不限时永久流量包」作为跨机房容灾备份。
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="mt-4 h-2.5 w-full overflow-hidden rounded-sm bg-ink-800">
+                <div
+                  id="risk-progress-bar"
+                  class="h-full bg-emerald-500 transition-all duration-300"
+                  style="width: 3%"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Checkboxes Grid -->
+            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+              {RUNAWAY_RED_FLAGS.map((flag) => (
+                <label
+                  for={`calc-${flag.id}`}
+                  class="flex cursor-pointer items-start gap-3 rounded-sm border border-white/10 bg-ink-950/60 p-4 hover:border-accent-500/40 transition select-none"
+                >
+                  <input
+                    id={`calc-${flag.id}`}
+                    type="checkbox"
+                    data-risk-weight={flag.weight}
+                    class="risk-checkbox mt-1 h-4 w-4 rounded border-white/30 bg-ink-900 text-accent-500 focus:ring-accent-500"
+                  />
+                  <div class="text-xs">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-mono font-bold text-accent-400">[{flag.code}]</span>
+                      <span
+                        class={`rounded-sm px-1.5 py-0.5 font-mono text-[10px] font-bold ${
+                          flag.severity === '高危信号'
+                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                            : flag.severity === '中危信号'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                        }`}
+                      >
+                        {flag.severity} +{flag.weight}分
+                      </span>
+                    </div>
+                    <p class="mt-1.5 font-bold text-white leading-snug">{flag.title}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- 02. Deep Breakdown of 10 Pre-Runaway Red Flags -->
+          <div id="sec-red-flags" class="scroll-mt-28 space-y-6">
+            <div>
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                PRE-COLLAPSE INDICATORS · 行业风控剖析
+              </span>
+              <h2 class="mt-2 font-display text-2xl font-bold text-white">
+                02. 机场跑路前的十大高危征兆深度拆解（附底层原因与止损动作）
+              </h2>
+              <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+                没有任何一家机场是在毫不知情的情况下突然蒸发的。在关站前的 2–6 周内，其上游机房链路、促销策略与社群响应一定会暴露出以下明显信号：
+              </p>
+            </div>
+
+            <div class="grid gap-4">
+              {RUNAWAY_RED_FLAGS.map((flag) => (
+                <div class="rounded-sm border border-white/10 bg-ink-900/60 p-5 md:p-6">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                      <span class="rounded-sm bg-accent-500/15 border border-accent-500/30 px-2.5 py-0.5 font-mono text-xs font-bold text-accent-400">
+                        {flag.code}
+                      </span>
+                      <h3 class="font-display text-base font-bold text-white">{flag.title}</h3>
+                    </div>
+                    <span
+                      class={`rounded-sm px-2.5 py-0.5 font-mono text-xs font-bold ${
+                        flag.severity === '高危信号'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : flag.severity === '中危信号'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                      }`}
+                    >
+                      {flag.severity} · 权重 {flag.weight}%
+                    </span>
+                  </div>
+
+                  <div class="mt-4 grid gap-4 md:grid-cols-3 text-xs">
+                    <div class="rounded-sm border border-white/5 bg-ink-950/70 p-3.5">
+                      <span class="font-mono text-[11px] font-bold text-ink-400 uppercase block mb-1">
+                        典型外在表现：
+                      </span>
+                      <p class="text-ink-200 leading-relaxed">{flag.symptom}</p>
+                    </div>
+                    <div class="rounded-sm border border-white/5 bg-ink-950/70 p-3.5">
+                      <span class="font-mono text-[11px] font-bold text-amber-400 uppercase block mb-1">
+                        资金链/机房底层真相：
+                      </span>
+                      <p class="text-ink-200 leading-relaxed">{flag.rootCause}</p>
+                    </div>
+                    <div class="rounded-sm border border-emerald-500/20 bg-emerald-500/5 p-3.5">
+                      <span class="font-mono text-[11px] font-bold text-emerald-400 uppercase block mb-1">
+                        用户立即止损建议：
+                      </span>
+                      <p class="text-emerald-200 leading-relaxed">{flag.actionAdvice}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 03. False Alarm vs True Runaway 6-Step Troubleshooting -->
+          <div
+            id="sec-troubleshoot"
+            class="scroll-mt-28 rounded-sm border border-white/10 bg-ink-900/70 p-6 md:p-8"
+          >
+            <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+              DIAGNOSTIC WORKFLOW · 85% 属于本地假失联
+              </span>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              03. 假失联 vs 真跑路：节点全红 Timeout 六步自检急救流
+            </h2>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              遇到节点全部显示红色 `Timeout` 或订阅更新失败时，先别急着下结论说机场跑路了。根据统计，<strong class="text-white">超过 85% 的突发断连其实是系统时间偏差、开着代理更新订阅死锁或本地运营商 DNS 污染</strong>。按以下 6 步顺序排查，1 分钟即可定位真相：
+            </p>
+
+            <div class="mt-6 space-y-4">
+              {FALSE_ALARM_STEPS.map((item) => (
+                <div class="rounded-sm border border-white/10 bg-ink-950/80 p-5">
+                  <div class="flex flex-wrap items-center gap-3">
+                    <span class="rounded-sm bg-accent-500 px-2.5 py-0.5 font-mono text-xs font-bold text-ink-950">
+                      {item.step}
+                    </span>
+                    <h3 class="font-display text-base font-bold text-white">{item.title}</h3>
+                  </div>
+                  <p class="mt-2.5 text-xs text-ink-200 leading-relaxed">
+                    <strong class="text-accent-400">检测操作：</strong>{item.checkMethod}
+                  </p>
+                  <div class="mt-3 grid gap-3 sm:grid-cols-2 text-xs">
+                    <div class="rounded-sm border border-white/10 bg-ink-900/70 p-3">
+                      <span class="font-mono text-[11px] font-bold text-amber-400 block mb-1">
+                        异常原因分析：
+                      </span>
+                      <p class="text-ink-300 leading-relaxed">{item.ifAbnormalMeans}</p>
+                    </div>
+                    <div class="rounded-sm border border-emerald-500/25 bg-emerald-500/10 p-3">
+                      <span class="font-mono text-[11px] font-bold text-emerald-400 block mb-1">
+                        10秒修复动作：
+                      </span>
+                      <p class="text-emerald-200 leading-relaxed">{item.fixAction}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 04. Full 42-Brand Operational & Verification Status Monitor Table -->
+          <div
+            id="sec-monitor-table"
+            class="scroll-mt-28 rounded-sm border border-white/10 bg-ink-900/70 p-6 md:p-8"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                  42-BRAND LIVE OBSERVATORY · 全景核验与防钓鱼台账
+                </span>
+                <h2 class="mt-1 font-display text-2xl font-bold text-white">
+                  04. 42家机场品牌运营状态与数据核验监控总表（2026 实时版）
+                </h2>
+              </div>
+              <span class="rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300">
+                正版防失联入口核验
+              </span>
+            </div>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              为彻底杜绝搜索引擎李鬼钓鱼网站与信息不对称，下表实时汇总本站建档的 <strong class="text-white">42 家机场品牌</strong> 的当前数据核验等级、专线架构、是否提供不限时按量备用包及风险审计建议。支持按名称搜索或按核验状态过滤：
+            </p>
+
+            <!-- Search & Status Filter Bar -->
+            <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <input
+                id="brand-monitor-search"
+                type="search"
+                placeholder="输入机场名称或拼音检索：如 光速云、幻网、飞鸟云、威图云、魔戒..."
+                class="w-full sm:max-w-xs rounded-sm border border-white/15 bg-ink-950 px-3.5 py-2 text-xs text-white placeholder-ink-400 focus:border-accent-500 focus:outline-none"
+              />
+              <div class="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  data-status-filter="all"
+                  class="monitor-filter-btn rounded-sm border border-accent-500 bg-accent-500 px-2.5 py-1 text-xs font-bold text-ink-950 transition cursor-pointer"
+                >
+                  全部 (42)
+                </button>
+                <button
+                  type="button"
+                  data-status-filter="measured"
+                  class="monitor-filter-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-ink-200 hover:border-accent-500/50 transition cursor-pointer"
+                >
+                  实测在线
+                </button>
+                <button
+                  type="button"
+                  data-status-filter="vendor"
+                  class="monitor-filter-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-ink-200 hover:border-accent-500/50 transition cursor-pointer"
+                >
+                  公开参数核验
+                </button>
+                <button
+                  type="button"
+                  data-status-filter="archive"
+                  class="monitor-filter-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-ink-200 hover:border-accent-500/50 transition cursor-pointer"
+                >
+                  历史档案
+                </button>
+                <button
+                  type="button"
+                  data-status-filter="pending"
+                  class="monitor-filter-btn rounded-sm border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-ink-200 hover:border-accent-500/50 transition cursor-pointer"
+                >
+                  基础建档
+                </button>
+              </div>
+            </div>
+
+            <!-- 42 Brands Table -->
+            <div class="mt-5 overflow-x-auto max-h-[680px] overflow-y-auto border border-white/10 rounded-sm">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead class="sticky top-0 z-10 bg-ink-950 border-b border-white/15 text-ink-300 font-mono uppercase">
+                  <tr>
+                    <th class="py-3 px-3">排名</th>
+                    <th class="py-3 px-3">品牌名称</th>
+                    <th class="py-3 px-3">底层线路架构</th>
+                    <th class="py-3 px-3">核验与运营状态</th>
+                    <th class="py-3 px-3">选型与风控建议</th>
+                    <th class="py-3 px-3 text-right">档案与正版入口</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10 bg-ink-950/60">
+                  {ALL_BRANDS.map((brand) => {
+                    const statusKey =
+                      brand.speedtest.status === 'measured'
+                        ? 'measured'
+                        : brand.unlock.status === 'vendor'
+                          ? 'vendor'
+                          : brand.speedtest.status === 'historical'
+                            ? 'archive'
+                            : 'pending';
+                    const st = statusLabelMap[statusKey] || statusLabelMap.pending;
+                    const hasPermanent = brand.plans.some(
+                      (p) =>
+                        p.cycle.includes('永久') ||
+                        p.cycle.includes('一次性') ||
+                        p.name.includes('不限时') ||
+                        p.name.includes('永久')
+                    );
+                    return (
+                      <tr
+                        data-monitor-row
+                        data-status={statusKey}
+                        data-brand-search={`${brand.name} ${brand.slug} ${brand.lineType}`.toLowerCase()}
+                        class={
+                          brand.rank === 1
+                            ? 'bg-accent-500/10 hover:bg-accent-500/15 transition'
+                            : 'hover:bg-white/5 transition'
+                        }
+                      >
+                        <td class="py-3 px-3 font-mono font-bold text-accent-400">
+                          #{String(brand.rank).padStart(2, '0')}
+                        </td>
+                        <td class="py-3 px-3">
+                          <a
+                            href={`/brands/${brand.slug}/`}
+                            class="font-bold text-white hover:text-accent-400 transition block"
+                          >
+                            {brand.name}
+                          </a>
+                          {hasPermanent && (
+                            <span class="mt-0.5 inline-block rounded-sm bg-accent-500/20 px-1.5 py-0.2 font-mono text-[10px] text-accent-300">
+                              含不限时永久包
+                            </span>
+                          )}
+                        </td>
+                        <td class="py-3 px-3 text-ink-200">{brand.lineType}</td>
+                        <td class="py-3 px-3">
+                          <span
+                            class={`inline-block rounded-sm border px-2 py-0.5 font-mono text-[11px] ${st.badgeClass}`}
+                          >
+                            {st.label}
+                          </span>
+                        </td>
+                        <td class="py-3 px-3 text-ink-300">{st.safetyNote}</td>
+                        <td class="py-3 px-3 text-right whitespace-nowrap">
+                          <a
+                            href={`/brands/${brand.slug}/`}
+                            class="rounded-sm border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white hover:border-accent-500 hover:text-accent-400 transition inline-block mr-1.5"
+                          >
+                            评测档案
+                          </a>
+                          {brand.registerUrl && (
+                            <a
+                              href={brand.registerUrl}
+                              target="_blank"
+                              rel="nofollow sponsored noopener"
+                              class="rounded-sm bg-accent-500 px-2.5 py-1 text-xs font-bold text-ink-950 hover:bg-accent-400 transition inline-block"
+                            >
+                              正版直达 ↗
+                            </a>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-3 font-mono text-[11px] text-ink-400">
+              * 透明性声明：{AFFILIATE_DISCLOSURE}。对于标注为「历史档案」或「基础建档」的品牌，首次体验请严格遵循月付测试原则。
+            </p>
+          </div>
+
+          <!-- 05. Dual-Insurance Architecture Section -->
+          <div
+            id="sec-dual-insurance"
+            class="scroll-mt-28 rounded-sm border border-emerald-500/35 bg-ink-900/80 p-6 md:p-8"
+          >
+            <span class="font-mono text-xs font-bold uppercase tracking-widest text-emerald-400">
+              HIGH-AVAILABILITY ARCHITECTURE · 终极防失联双保险
+            </span>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              05. 终极防失联方案：「主力 IEPL 包年 + 异构不限时永久包」双保险架构
+            </h2>
+            <p class="mt-2 text-sm text-ink-300 leading-relaxed">
+              资深开发者、外贸从业者与重度 AI 用户从不把网络生命线押在单一节点上。通过 <strong class="text-white">1 家高性价比真 IEPL 专线包年主力 + 1 份永不过期的不限时按量备份包</strong>，配合 Mihomo 内核的 `fallback` 自动故障转移，你可以用最低成本获得企业级 99.99% SLA 可用性：
+            </p>
+
+            <div class="mt-6 grid gap-5 md:grid-cols-2">
+              <!-- Primary Plan Card -->
+              <div class="rounded-sm border border-accent-500/40 bg-ink-950 p-5">
+                <div class="flex items-center justify-between">
+                  <span class="rounded-sm bg-accent-500 px-2 py-0.5 font-mono text-[11px] font-bold text-ink-950">
+                    主力通道 (承担 99% 日常流量)
+                  </span>
+                  <span class="font-mono text-xs text-emerald-400">TOP #1 实测标杆</span>
+                </div>
+                <h3 class="mt-3 font-display text-lg font-bold text-white">
+                  #1 光速云（IEPL 专线年付）
+                </h3>
+                <ul class="mt-3 space-y-1.5 text-xs text-ink-200">
+                  <li>• <strong>物理链路</strong>：IEPL 专线 + 企业级内网专线双架构（VLESS 协议）</li>
+                  <li>• <strong>实测表现</strong>：2026-08-11 / 2026-10-19 全节点真实测速归档，香港峰值 529Mbps</li>
+                  <li>• <strong>黄金价格</strong>：轻量版 <strong>¥99/年</strong>（折合 ¥8.25/月），常规套餐可用 8 折码 <code class="text-accent-400 font-bold">AMM</code></li>
+                  <li>• <strong>客户端支持</strong>：同时提供自研客户端与 Clash / Shadowrocket 通用订阅导入</li>
+                </ul>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <a
+                    href={lightspeed.registerUrl}
+                    target="_blank"
+                    rel="nofollow sponsored noopener"
+                    class="rounded-sm bg-accent-500 px-4 py-2 text-xs font-bold text-ink-950 hover:bg-accent-400 transition"
+                  >
+                    直达光速云官网 (优惠码 AMM) ↗
+                  </a>
+                  <a
+                    href="/brands/guangsuyun/"
+                    class="rounded-sm border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white hover:border-accent-500 transition"
+                  >
+                    查看光速云实测图档
+                  </a>
+                </div>
+              </div>
+
+              <!-- Backup Plan Card -->
+              <div class="rounded-sm border border-emerald-500/40 bg-ink-950 p-5">
+                <div class="flex items-center justify-between">
+                  <span class="rounded-sm bg-emerald-500 px-2 py-0.5 font-mono text-[11px] font-bold text-ink-950">
+                    灾备通道 (永不过期 · 用完为止)
+                  </span>
+                  <span class="font-mono text-xs text-emerald-300">0 月租闲置损耗</span>
+                </div>
+                <h3 class="mt-3 font-display text-lg font-bold text-white">
+                  不限时永久按量流量包（光速云 247GB / 唯兔云 100-200GB）
+                </h3>
+                <ul class="mt-3 space-y-1.5 text-xs text-ink-200">
+                  <li>• <strong>核心优势</strong>：一次购买永久有效，没有月底清零限制，平时不用一分钱不花</li>
+                  <li>• <strong>选型 A（同厂高规格）</strong>：#1 光速云 致敬斯诺克永久套餐 <strong>¥147 / 247GB</strong>（同享 IEPL 双专线）</li>
+                  <li>• <strong>选型 B（异构跨机房）</strong>：#9 唯兔云 IPLC 永久包 <strong>¥100/100GB · ¥160/200GB</strong>（或 #7 二猫云 ¥99/100GB）</li>
+                  <li>• <strong>救砖场景</strong>：当遇到跨国光缆维护或需要对比不同 IP 纯净度时，1 秒切换即刻救场</li>
+                </ul>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <a
+                    href="/brands/weituyun/"
+                    class="rounded-sm bg-emerald-500 px-4 py-2 text-xs font-bold text-ink-950 hover:bg-emerald-400 transition"
+                  >
+                    查看 #9 唯兔云 永久包 →
+                  </a>
+                  <a
+                    href="/services/pay-as-you-go-traffic/"
+                    class="rounded-sm border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white hover:border-emerald-400 transition"
+                  >
+                    按量付费专题对比
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fallback YAML Config Block -->
+            <div class="mt-6 rounded-sm border border-white/10 bg-ink-950 p-4">
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                <span class="font-mono text-xs text-emerald-400">
+                  Mihomo / Clash Verge Rev 自动故障转移 (Fallback) 策略组模板
+                </span>
+                <button
+                  id="copy-fallback-yaml"
+                  type="button"
+                  data-yaml={fallbackConfigSnippet}
+                  class="rounded-sm bg-white/10 px-2.5 py-1 font-mono text-xs text-white hover:bg-accent-500 hover:text-ink-950 transition cursor-pointer"
+                >
+                  复制配置代码
+                </button>
+              </div>
+              <pre class="overflow-x-auto font-mono text-xs text-emerald-300 leading-relaxed"><code>{fallbackConfigSnippet}</code></pre>
+            </div>
+          </div>
+
+          <!-- 06. 4 Root Causes of Airport Shutdowns -->
+          <div id="sec-causes" class="scroll-mt-28 space-y-5">
+            <div>
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                INDUSTRY ECONOMICS · 为什么小机场容易崩盘？
+              </span>
+              <h2 class="mt-2 font-display text-2xl font-bold text-white">
+                06. 深度起底：导致机场关站或跑路的四大底层结构性原因
+              </h2>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              {RUNAWAY_CAUSES.map((cause) => (
+                <div class="rounded-sm border border-white/10 bg-ink-900/60 p-5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs font-bold text-accent-400">{cause.badge}</span>
+                    <span class="rounded-sm bg-white/10 px-2 py-0.5 font-mono text-xs text-white">
+                      诱因占比 {cause.percentage}
+                    </span>
+                  </div>
+                  <h3 class="mt-2 font-display text-base font-bold text-white">{cause.title}</h3>
+                  <p class="mt-2 text-xs text-ink-300 leading-relaxed">{cause.mechanism}</p>
+                  <div class="mt-3 rounded-sm border-l-2 border-emerald-500 bg-emerald-500/10 p-2.5 text-xs text-emerald-200">
+                    <strong>避坑指南：</strong>{cause.howToAvoid}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 07. 6 Golden Rules -->
+          <div
+            id="sec-golden-rules"
+            class="scroll-mt-28 rounded-sm border border-white/10 bg-ink-900/70 p-6 md:p-8"
+          >
+            <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+              SURVIVAL PLAYBOOK · 科学上网零焦虑铁律
+            </span>
+            <h2 class="mt-2 font-display text-2xl font-bold text-white">
+              07. 防跑路与防失联黄金六法则（资深玩家必存清单）
+            </h2>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              {ANTI_RUNAWAY_GOLDEN_RULES.map((rule) => (
+                <div class="rounded-sm border border-white/10 bg-ink-950/80 p-5">
+                  <div class="flex items-center gap-2.5">
+                    <span class="rounded-sm bg-accent-500 px-2 py-0.5 font-mono text-xs font-bold text-ink-950">
+                      RULE {rule.num}
+                    </span>
+                    <h3 class="font-display text-sm font-bold text-white">{rule.title}</h3>
+                  </div>
+                  <p class="mt-2 text-xs font-semibold text-accent-300">{rule.summary}</p>
+                  <p class="mt-2 text-xs text-ink-300 leading-relaxed">{rule.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 08. Runaway FAQ -->
+          <div id="sec-faq" class="scroll-mt-28 space-y-5">
+            <div>
+              <span class="font-mono text-xs font-bold uppercase tracking-widest text-accent-400">
+                GEO Q&A · 跑路防坑与急救高频问答
+              </span>
+              <h2 class="mt-2 font-display text-2xl font-bold text-white">
+                08. 关于机场跑路预警、维权防骗与主备切换的常见问题
+              </h2>
+            </div>
+
+            <div class="space-y-3">
+              {RUNAWAY_FAQ.map((item, idx) => (
+                <details
+                  open={idx < 4}
+                  class="group rounded-sm border border-white/10 bg-ink-900/60 p-5 hover:border-accent-500/40 transition"
+                >
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-base font-bold text-white">
+                    <span>Q{idx + 1}. {item.q}</span>
+                    <span class="font-mono text-xs text-accent-400 group-open:rotate-180 transition-transform">
+                      ▼
+                    </span>
+                  </summary>
+                  <p class="mt-3 border-t border-white/10 pt-3 text-sm text-ink-200 leading-relaxed">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <QuoteSection />
+
+  <script>
+    // 1. Interactive 10-Point Runaway Risk Calculator
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.risk-checkbox');
+    const scoreNumber = document.getElementById('risk-score-number');
+    const levelBadge = document.getElementById('risk-level-badge');
+    const adviceBox = document.getElementById('risk-advice-box');
+    const progressBar = document.getElementById('risk-progress-bar');
+    const resetBtn = document.getElementById('reset-risk-calc');
+
+    function updateRiskScore() {
+      let score = 0;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) {
+          score += Number(cb.getAttribute('data-risk-weight') || 0);
+        }
+      });
+
+      if (scoreNumber) scoreNumber.textContent = String(score);
+      if (progressBar) progressBar.style.width = `${Math.max(3, Math.min(100, score))}%`;
+
+      if (!levelBadge || !adviceBox || !scoreNumber || !progressBar) return;
+
+      if (score === 0) {
+        scoreNumber.className = 'font-display text-4xl font-bold text-emerald-400';
+        levelBadge.className =
+          'rounded-sm border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-emerald-300';
+        levelBadge.textContent = '安全稳定 · 正常运营';
+        progressBar.className = 'h-full bg-emerald-500 transition-all duration-300';
+        adviceBox.textContent =
+          '当前未勾选任何高危信号。即便主力机场运营良好，仍建议在客户端常备一份「不限时永久流量包」作为跨机房容灾备份。';
+      } else if (score <= 20) {
+        scoreNumber.className = 'font-display text-4xl font-bold text-sky-400';
+        levelBadge.className =
+          'rounded-sm border border-sky-500/40 bg-sky-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-sky-300';
+        levelBadge.textContent = '轻度观察 · 注意排查本地设置';
+        progressBar.className = 'h-full bg-sky-500 transition-all duration-300';
+        adviceBox.textContent =
+          '风险尚处于低位，可能属于短期机房维护或本地 DNS 波动。建议先按本页「6步自检法」刷新订阅，并避免一次性续费超长周期。';
+      } else if (score <= 45) {
+        scoreNumber.className = 'font-display text-4xl font-bold text-amber-400';
+        levelBadge.className =
+          'rounded-sm border border-amber-500/40 bg-amber-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-amber-300';
+        levelBadge.textContent = '中度预警 · 停止续费并准备备胎';
+        progressBar.className = 'h-full bg-amber-500 transition-all duration-300';
+        adviceBox.textContent =
+          '已出现明显的运维缩水或资金链吃紧迹象！请立即停止在该机场续费任何新套餐，仅用完剩余流量，并马上配置好 #1 光速云 或 #7 威图云 备用订阅。';
+      } else {
+        scoreNumber.className = 'font-display text-4xl font-bold text-rose-400';
+        levelBadge.className =
+          'rounded-sm border border-rose-500/40 bg-rose-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-rose-300';
+        levelBadge.textContent = '极高危告警 · 崩盘前兆！立即止损';
+        progressBar.className = 'h-full bg-rose-500 transition-all duration-300';
+        adviceBox.textContent =
+          '高危警告：多项核心跑路指标同时命中（如大额低价促销 + 专线掉线 + 群组禁言），随时可能彻底关站失联！切勿再充值一分钱，请立即将主力业务迁移至实测 T0 专线品牌。';
+      }
+    }
+
+    checkboxes.forEach((cb) => cb.addEventListener('change', updateRiskScore));
+    resetBtn?.addEventListener('click', () => {
+      checkboxes.forEach((cb) => {
+        cb.checked = false;
+      });
+      updateRiskScore();
+    });
+
+    // 2. 42-Brand Monitor Table Search & Filter
+    const monitorSearch = document.getElementById('brand-monitor-search') as HTMLInputElement | null;
+    const monitorBtns = document.querySelectorAll<HTMLButtonElement>('.monitor-filter-btn');
+    const monitorRows = document.querySelectorAll<HTMLTableRowElement>('[data-monitor-row]');
+    let activeStatus = 'all';
+
+    function filterMonitorTable() {
+      const q = (monitorSearch?.value || '').trim().toLowerCase();
+      monitorRows.forEach((row) => {
+        const st = row.getAttribute('data-status') || '';
+        const s = row.getAttribute('data-brand-search') || '';
+        const matchStatus = activeStatus === 'all' || st === activeStatus;
+        const matchQuery = !q || s.includes(q);
+        if (matchStatus && matchQuery) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    monitorSearch?.addEventListener('input', filterMonitorTable);
+    monitorBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeStatus = btn.getAttribute('data-status-filter') || 'all';
+        monitorBtns.forEach((b) => {
+          b.classList.remove('border-accent-500', 'bg-accent-500', 'text-ink-950', 'font-bold');
+          b.classList.add('border-white/10', 'bg-white/5', 'text-ink-200');
+        });
+        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink-200');
+        btn.classList.add('border-accent-500', 'bg-accent-500', 'text-ink-950', 'font-bold');
+        filterMonitorTable();
+      });
+    });
+
+    // 3. Copy Fallback YAML Snippet
+    const copyYamlBtn = document.getElementById('copy-fallback-yaml');
+    copyYamlBtn?.addEventListener('click', async () => {
+      const yaml = copyYamlBtn.getAttribute('data-yaml') || '';
+      try {
+        await navigator.clipboard.writeText(yaml);
+        const orig = copyYamlBtn.textContent;
+        copyYamlBtn.textContent = '✓ 已复制配置';
+        setTimeout(() => {
+          copyYamlBtn.textContent = orig;
+        }, 1800);
+      } catch {
+        // ignore
+      }
+    });
+  </script>
+</BaseLayout>

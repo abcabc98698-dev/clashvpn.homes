@@ -1,0 +1,184 @@
+---
+import type { AirportBrand } from "../../data/brands-types";
+
+interface Props {
+  brand: AirportBrand;
+}
+
+const { brand } = Astro.props;
+const isLeasedLine = brand.lineFilter === "IEPL" || brand.lineFilter === "IPLC";
+---
+
+<section
+  class="rounded-[18px] border border-white/10 bg-[#0A0F1D] p-6 sm:p-8 text-[#F8FAFC] shadow-2xl"
+  aria-label={`${brand.name} 跨境专线网络链路拓扑图`}
+>
+  <div class="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#06B6D4] shadow-[0_0_12px_#06B6D4]"></span>
+        <span class="font-mono text-xs uppercase tracking-widest text-[#94A3B8]">
+          NETWORK PATH OBSERVATORY · 传输链路拓扑
+        </span>
+      </div>
+      <h3 class="mt-1.5 font-display text-xl font-bold text-white sm:text-2xl">
+        {brand.name} 跨境传输架构（{brand.lineType}）
+      </h3>
+    </div>
+
+    <span class="rounded-full border border-[#06B6D4]/35 bg-[#06B6D4]/15 px-3 py-1 font-mono text-xs font-semibold text-[#06B6D4]">
+      协议栈：{brand.protocols.join(" · ")}
+    </span>
+  </div>
+
+  <!-- SVG Topology Diagram -->
+  <div class="mt-6 overflow-x-auto rounded-xl border border-white/8 bg-[#070B16] p-4">
+    <svg
+      viewBox="0 0 880 210"
+      class="w-full min-w-[680px] h-auto"
+      role="img"
+      aria-label={`${brand.name} 从用户终端经国内入口、跨境链路到海外落地节点的网络拓扑图`}
+    >
+      <defs>
+        <linearGradient id={`lineGrad-${brand.slug}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#3B82F6" />
+          <stop offset="50%" stop-color="#06B6D4" />
+          <stop offset="100%" stop-color="#10B981" />
+        </linearGradient>
+      </defs>
+
+      <!-- Subtle grid lines -->
+      <line x1="20" y1="40" x2="860" y2="40" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+      <line x1="20" y1="105" x2="860" y2="105" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+      <line x1="20" y1="170" x2="860" y2="170" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+
+      <!-- Connecting Lines -->
+      <line
+        x1="190"
+        y1="105"
+        x2="265"
+        y2="105"
+        stroke="#3B82F6"
+        stroke-width="3"
+        stroke-dasharray="6 4"
+      />
+      <rect
+        x="435"
+        y="93"
+        width="175"
+        height="24"
+        rx="12"
+        fill="rgba(6, 182, 212, 0.14)"
+        stroke="rgba(6, 182, 212, 0.5)"
+        stroke-width="1.5"
+      />
+      <text
+        x="522"
+        y="109"
+        text-anchor="middle"
+        fill="#06B6D4"
+        font-family="monospace"
+        font-size="11"
+        font-weight="700"
+      >
+        {isLeasedLine ? "IEPL/IPLC 物理内网专线" : "BGP 智能隧道加密传输"}
+      </text>
+
+      <!-- Node 1: User Devices -->
+      <rect
+        x="20"
+        y="55"
+        width="170"
+        height="100"
+        rx="14"
+        fill="#111827"
+        stroke="rgba(255,255,255,0.14)"
+        stroke-width="1.5"
+      />
+      <text x="38" y="82" fill="#94A3B8" font-family="monospace" font-size="10">
+        STEP 01 · CLIENT
+      </text>
+      <text x="38" y="104" fill="#F8FAFC" font-size="14" font-weight="700">
+        本地终端与软路由
+      </text>
+      <text x="38" y="124" fill="#64748B" font-size="11">
+        Clash / 小火箭 / 自研端
+      </text>
+      <text x="38" y="141" fill="#3B82F6" font-family="monospace" font-size="10">
+        {brand.clientSupport}
+      </text>
+
+      <!-- Node 2: Domestic BGP Entry -->
+      <rect
+        x="265"
+        y="55"
+        width="170"
+        height="100"
+        rx="14"
+        fill="#111827"
+        stroke="rgba(59, 130, 246, 0.45)"
+        stroke-width="1.5"
+      />
+      <text x="283" y="82" fill="#3B82F6" font-family="monospace" font-size="10">
+        STEP 02 · BGP INGRESS
+      </text>
+      <text x="283" y="104" fill="#F8FAFC" font-size="14" font-weight="700">
+        国内多线BGP中转入口
+      </text>
+      <text x="283" y="124" fill="#94A3B8" font-size="11">
+        电信/联通/移动就近接入
+      </text>
+      <text x="283" y="141" fill="#06B6D4" font-family="monospace" font-size="10">
+        隐藏真实客户端源 IP
+      </text>
+
+      <!-- Node 3: Overseas Landing -->
+      <rect
+        x="610"
+        y="55"
+        width="250"
+        height="100"
+        rx="14"
+        fill="#111827"
+        stroke="rgba(16, 185, 129, 0.45)"
+        stroke-width="1.5"
+      />
+      <text x="628" y="82" fill="#10B981" font-family="monospace" font-size="10">
+        STEP 03 · EGRESS POP
+      </text>
+      <text x="628" y="104" fill="#F8FAFC" font-size="14" font-weight="700">
+        海外原生/解锁落地机房
+      </text>
+      <text x="628" y="124" fill="#94A3B8" font-size="11">
+        覆盖：{brand.nodeRegions.slice(0, 5).join(" / ")}
+      </text>
+      <text x="628" y="141" fill="#10B981" font-family="monospace" font-size="10">
+        直达 ChatGPT · Claude · Netflix 4K
+      </text>
+    </svg>
+  </div>
+
+  <!-- 3-Column Technical Explanation -->
+  <div class="mt-5 grid gap-4 sm:grid-cols-3">
+    <div class="rounded-xl border border-white/8 bg-[#111827]/70 p-4">
+      <div class="font-mono text-xs font-semibold text-[#3B82F6]">01. 客户端协议握手机制</div>
+      <p class="mt-1.5 text-xs leading-relaxed text-[#94A3B8]">
+        通过 {brand.protocols.join("/")} 加密封装本地流量，支持按域名（Domain）与 IP-CIDR 智能分流，国内网站直连不耗流量。
+      </p>
+    </div>
+    <div class="rounded-xl border border-white/8 bg-[#111827]/70 p-4">
+      <div class="font-mono text-xs font-semibold text-[#06B6D4]">02. 跨境内网抗抖动能力</div>
+      <p class="mt-1.5 text-xs leading-relaxed text-[#94A3B8]">
+        {isLeasedLine
+          ? "采用广港/沪日/沪美等内网专线过境，绕开公网国际出口拥塞与晚高峰 QoS 限速，丢包率显著低于普通公网直连。"
+          : "采用国内大带宽 BGP 中转入口汇聚流量，相比传统海外直连节点具备更快的握手速度与抗封锁能力。"}
+      </p>
+    </div>
+    <div class="rounded-xl border border-white/8 bg-[#111827]/70 p-4">
+      <div class="font-mono text-xs font-semibold text-[#10B981]">03. 落地 IP 纯净度与解锁</div>
+      <p class="mt-1.5 text-xs leading-relaxed text-[#94A3B8]">
+        落地节点部署于 {brand.nodeRegions.slice(0, 4).join("、")} 等核心数据中心，配合流媒体 DNS 解锁路由满足 AI 问答与 4K 观影需求。
+      </p>
+    </div>
+  </div>
+</section>

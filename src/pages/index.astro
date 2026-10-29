@@ -1,7 +1,9 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import StoryHero from "../components/story/StoryHero.astro";
 import Stats from "../components/sections/Stats.astro";
+import TopBrandsRanking from "../components/sections/TopBrandsRanking.astro";
 import ServicesGrid from "../components/sections/ServicesGrid.astro";
 import QuotePanel from "../components/sections/QuotePanel.astro";
 import ServiceAreas from "../components/sections/ServiceAreas.astro";
@@ -9,20 +11,49 @@ import Testimonials from "../components/sections/Testimonials.astro";
 import Faq from "../components/sections/Faq.astro";
 import QuoteSection from "../components/sections/QuoteSection.astro";
 import { SITE } from "../config";
+import { TOP10_BRANDS } from "../data/brands";
+import { faqPageJsonLd, itemListJsonLd } from "../lib/schema";
+
+const site = Astro.site ?? new URL(SITE.url);
+const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
+
+const extraJsonLd = [
+  itemListJsonLd(
+    site,
+    "2026 年度 Clash 机场订阅实测推荐 TOP 10 总榜",
+    TOP10_BRANDS.map((b) => ({
+      rank: b.rank,
+      name: `${b.name} (${b.entryPriceLabel})`,
+      urlPath: `/brands/${b.slug}/`,
+      description: b.summary,
+    }))
+  ),
+  faqPageJsonLd(
+    faqs.map((f) => ({
+      q: f.data.question,
+      a: f.data.answer,
+    }))
+  ),
+];
 ---
 
-<BaseLayout description={SITE.description}>
+<BaseLayout description={SITE.description} extraJsonLd={extraJsonLd}>
   <StoryHero
-    title="Plumbing and heating repairs, priced before we start."
-    highlight="priced before we start"
-    lead={`Licensed plumbers, stocked vans and a dispatcher who answers at 3 am. Most repairs are finished on the first visit, and our labor is guaranteed for two years.`}
-    points={[`${SITE.trust.callOut} call-out, taken off the repair`, "Written price before work starts", "2-year guarantee on labor"]}
+    title="2026 高速专线机场订阅评测，真实测速后再下单。"
+    highlight="真实测速后再下单"
+    lead="收录全网 42 家主流与老牌机场品牌档案，留存 16 份 2026-08-11 原始测速图。客观呈现 IEPL/IPLC 专线延迟、ChatGPT/Claude 解锁与 Netflix 4K 表现。"
+    points={[
+      `#1 光速云年付 ${SITE.trust.callOut} (优惠码 AMM)`,
+      "16 份原始未裁剪测速截图留档",
+      "覆盖 Win / Mac / iOS / 安卓 / 软路由全客户端",
+    ]}
   />
   <Stats />
+  <TopBrandsRanking />
   <ServicesGrid />
   <QuotePanel
-    quote="He came back the next morning to refit the cabinet panel he'd taken off, and didn't charge for the second visit."
-    who="Dana K., Cedar Bluff · sample review"
+    quote="换了榜首推荐的光速云 IEPL 专线后，广港延迟稳定在 25ms 左右，开了 TUN 模式后命令行和 Cursor IDE 再也没报过超时，用 AMM 优惠码买年付才 99 元。"
+    who="陈工 · 深圳全栈开发工程师（电信千兆 / Clash Verge Rev）"
   />
   <ServiceAreas />
   <Testimonials />

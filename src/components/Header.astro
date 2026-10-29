@@ -4,25 +4,28 @@ import Icon from "./Icon.astro";
 import Logo from "./Logo.astro";
 
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path.startsWith(href);
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href);
 ---
 
 <header class="site-header">
   <div class="header-backdrop" aria-hidden="true"></div>
-  <div class="container-x relative flex h-16 items-center justify-between gap-3 sm:h-[72px]">
-    <a href="/" class="header-logo flex min-w-0 items-center gap-3 rounded-lg">
-      <Logo class="size-9 sm:size-10" />
-      <span class="truncate text-[1.125rem] leading-none font-bold tracking-tight">
-        <span class="xl:hidden">{SITE.shortName}</span>
-        <span class="hidden xl:inline">{SITE.name}</span>
+  <div class="container-x relative flex h-16 items-center justify-between gap-4 sm:h-[72px]">
+    <a href="/" class="header-logo flex shrink-0 items-center gap-2.5 rounded-lg whitespace-nowrap">
+      <Logo class="size-9 shrink-0 sm:size-10" />
+      <span class="text-[1.125rem] leading-none font-extrabold tracking-tight text-ink">
+        {SITE.shortName}
+      </span>
+      <span class="hidden rounded-md border border-line bg-surface px-2 py-1 text-xs font-semibold text-muted 2xl:inline-block">
+        42家实测档案
       </span>
     </a>
 
-    <nav aria-label="Main" class="hidden lg:block">
-      <ul class="flex items-center gap-1">
+    <nav aria-label="主导航" class="hidden shrink-0 lg:block">
+      <ul class="flex flex-nowrap items-center gap-0.5 xl:gap-1.5">
         {
           SITE.nav.map((item) => (
-            <li>
+            <li class="shrink-0">
               <a href={item.href} class="nav-link" aria-current={isCurrent(item.href) ? "page" : undefined}>
                 {item.label}
               </a>
@@ -32,17 +35,14 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
-      <a href={`tel:${SITE.phone.tel}`} class="btn btn-secondary hidden min-h-11 px-4 md:inline-flex">
-        <Icon name="phone" />
-        {SITE.phone.display}
+    <div class="flex shrink-0 items-center gap-2.5 whitespace-nowrap">
+      <a href="/brands/guangsuyun/" class="btn btn-primary hidden min-h-10 px-4 py-2 text-sm lg:inline-flex">
+        #1 光速云实测
       </a>
-      <a href="/contact/#quote" class="btn btn-primary hidden min-h-11 px-4 lg:inline-flex">Get a quote</a>
-      <a href={`tel:${SITE.phone.tel}`} class="btn btn-secondary min-h-11 px-4 md:hidden">
-        <Icon name="phone" />
-        Call<span class="sr-only"> {SITE.phone.display}</span>
+      <a href="/brands/guangsuyun/" class="btn btn-secondary min-h-10 px-3.5 py-2 text-xs font-bold lg:hidden">
+        #1 光速云
       </a>
-      <button type="button" popovertarget="mobile-nav" class="menu-btn inline-grid lg:hidden" aria-label="Open menu">
+      <button type="button" popovertarget="mobile-nav" class="menu-btn inline-grid shrink-0 lg:hidden" aria-label="打开导航菜单">
         <Icon name="menu" />
       </button>
     </div>
@@ -50,17 +50,16 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
 
   <div id="mobile-nav" popover class="mobile-nav">
     <div class="container-x flex h-16 items-center justify-between">
-      <a href="/" class="flex items-center gap-3 rounded-lg">
-        <Logo class="size-9" />
+      <a href="/" class="flex items-center gap-3 rounded-lg whitespace-nowrap">
+        <Logo class="size-9 shrink-0" />
         <span class="text-[1.125rem] leading-none font-bold tracking-tight">{SITE.shortName}</span>
       </a>
-      <button type="button" popovertarget="mobile-nav" popovertargetaction="hide" class="menu-btn inline-grid" aria-label="Close menu">
+      <button type="button" popovertarget="mobile-nav" popovertargetaction="hide" class="menu-btn inline-grid" aria-label="关闭导航菜单">
         <Icon name="x" />
       </button>
     </div>
-    <nav aria-label="Mobile" class="container-x pt-6">
+    <nav aria-label="移动端导航" class="container-x pt-6">
       <ul class="divide-y divide-line border-y border-line">
-        <li><a href="/" class="mobile-link">Home <Icon name="chevron-right" /></a></li>
         {
           SITE.nav.map((item) => (
             <li>
@@ -72,11 +71,10 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
         }
       </ul>
       <div class="mt-8 grid gap-3">
-        <a href={`tel:${SITE.phone.tel}`} class="btn btn-primary btn-lg w-full">
-          <Icon name="phone" />
-          Call {SITE.phone.display}
+        <a href="/brands/guangsuyun/" class="btn btn-primary btn-lg w-full">
+          查看 #1 光速云评测与优惠码
         </a>
-        <a href="/contact/#quote" class="btn btn-secondary btn-lg w-full">Get a free quote</a>
+        <a href="/brands/" class="btn btn-secondary btn-lg w-full">浏览全部 42 家品牌库</a>
       </div>
       <p class="mt-6 text-sm text-muted">{SITE.hoursNote}</p>
     </nav>
@@ -109,8 +107,12 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
   .nav-link {
     position: relative;
     display: inline-flex;
-    padding: 0.625rem 0.875rem;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.45rem 0.68rem;
     border-radius: 0.625rem;
+    font-size: 0.9125rem;
     font-weight: 600;
     color: var(--c-muted);
     transition: color 0.2s;
@@ -118,9 +120,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
   .nav-link::after {
     content: "";
     position: absolute;
-    left: 0.875rem;
-    right: 0.875rem;
-    bottom: 0.3rem;
+    left: 0.68rem;
+    right: 0.68rem;
+    bottom: 0.2rem;
     height: 2px;
     border-radius: 2px;
     background: var(--accent);
@@ -172,9 +174,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     align-items: center;
     justify-content: space-between;
     padding: 1.125rem 0.25rem;
-    font-size: 1.75rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
   .mobile-link :global(.icon) {
     color: var(--c-muted);

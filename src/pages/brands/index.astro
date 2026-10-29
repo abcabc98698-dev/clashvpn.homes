@@ -1,0 +1,435 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import QuoteSection from "../../components/sections/QuoteSection.astro";
+import Icon from "../../components/Icon.astro";
+import { SITE } from "../../config";
+import {
+  ALL_BRANDS,
+  FEATURED_BRAND,
+  AFFILIATE_DISCLOSURE,
+  DATA_DISCLAIMER,
+  getSpeedtestStatusMeta,
+} from "../../data/brands";
+import { collectionPageJsonLd, itemListJsonLd } from "../../lib/schema";
+
+const site = Astro.site ?? new URL(SITE.url);
+const crumbs = [{ label: "42家品牌库" }];
+const pageTitle = "2026 机场品牌大全：42家 Clash 订阅价格、IEPL 专线测速与优惠码对比";
+const pageDesc =
+  "收录全网 42 家主流与老牌机场品牌（含 #1 光速云、肥猫云、微风、星岛梦等 16 家 2026-08-11 原始测速图留档），支持按 IEPL/IPLC 线路、协议、客户端模式与月均价格实时筛选对比。";
+
+const extraJsonLd = [
+  collectionPageJsonLd(site, {
+    name: pageTitle,
+    description: pageDesc,
+    urlPath: "/brands/",
+  }),
+  itemListJsonLd(
+    site,
+    "2026 全网 42 家 Clash 与专线机场品牌评测档案库",
+    ALL_BRANDS.map((b) => ({
+      rank: b.rank,
+      name: `#${b.rank} ${b.name} (${b.entryPriceLabel})`,
+      urlPath: `/brands/${b.slug}/`,
+      description: b.summary,
+    }))
+  ),
+];
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
+>
+  <PageHeader
+    title="42 家机场品牌 *实测档案与筛选库*"
+    lead="涵盖 #1–#28 核心在营品牌（含 16 份 2026-08-11 原始测速图）与 #29–#42 历史归档品牌。严格标注「实测归档」「品牌资料显示」与「待核实」，拒绝虚假跑分。"
+    crumbs={crumbs}
+  />
+
+  <section class="section pt-10" aria-label="42家机场品牌交互式检索库">
+    <div class="container-x">
+      <!-- Data Status Legend Banner -->
+      <div class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="text-sm font-bold text-ink">
+            数据可观测性状态标签说明（Data Status Legend）：
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-mono">
+            <span class="rounded-full border border-[#10B981]/40 bg-[#10B981]/15 px-3 py-1 font-semibold text-[#10B981] whitespace-nowrap">
+              ● 实测数据 (Measured · 16家含2026-08-11原图)
+            </span>
+            <span class="rounded-full border border-[#06B6D4]/40 bg-[#06B6D4]/15 px-3 py-1 font-semibold text-[#06B6D4] whitespace-nowrap">
+              ● 历史实测 (Historical Archive)
+            </span>
+            <span class="rounded-full border border-[#F59E0B]/40 bg-[#F59E0B]/15 px-3 py-1 font-semibold text-[#F59E0B] whitespace-nowrap">
+              ● 品牌资料显示 (Vendor Data)
+            </span>
+            <span class="rounded-full border border-line bg-bg px-3 py-1 font-semibold text-muted whitespace-nowrap">
+              ● 待核实 (Pending Verification)
+            </span>
+          </div>
+        </div>
+        <p class="mt-3 text-xs leading-relaxed text-muted">
+          {DATA_DISCLAIMER}
+        </p>
+      </div>
+
+      <!-- Featured #1 Quick Banner -->
+      <div class="mt-6 rounded-2xl border border-white/15 bg-[#0A0F1D] p-6 text-white shadow-xl">
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+          <div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="rounded-full bg-[#ff7a29] px-3 py-0.5 text-xs font-extrabold text-[#0b0e1c]">
+                TOP #1 首选主力
+              </span>
+              <span class="font-mono text-xs text-[#10B981]">
+                2026-08-11 实测香港峰值 685.56Mbps
+              </span>
+              <span class="font-mono text-xs text-[#06B6D4]">
+                优惠码 {FEATURED_BRAND.couponCode} (8折)
+              </span>
+            </div>
+            <h2 class="mt-2 font-display text-xl font-bold sm:text-2xl">
+              {FEATURED_BRAND.name}：双 IEPL 专线 + 免配置自研客户端，年付 ¥99（¥8.25/月）或 ¥147 永久 247GB
+            </h2>
+            <p class="mt-1 text-xs text-[#94A3B8]">
+              * {AFFILIATE_DISCLOSURE}
+            </p>
+          </div>
+          <div class="flex flex-wrap shrink-0 gap-3">
+            {FEATURED_BRAND.registerUrl && (
+              <a
+                href={FEATURED_BRAND.registerUrl}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                class="btn btn-primary text-sm"
+              >
+                直达光速云官网 ↗
+              </a>
+            )}
+            <a
+              href={`/brands/${FEATURED_BRAND.slug}/`}
+              class="btn btn-secondary border-white/20 bg-white/10 text-white hover:bg-white/15 text-sm"
+            >
+              查看 #1 详细评测
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Filter & Sort Controls -->
+      <div class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-6">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div>
+            <label for="filter-search" class="block text-xs font-bold uppercase tracking-wider text-muted">
+              关键词搜索
+            </label>
+            <input
+              id="filter-search"
+              type="search"
+              placeholder="输入品牌名、IEPL、永久、Hysteria2..."
+              class="field mt-1.5 py-2.5 text-sm"
+            />
+          </div>
+
+          <div>
+            <label for="filter-line" class="block text-xs font-bold uppercase tracking-wider text-muted">
+              线路架构筛选
+            </label>
+            <select id="filter-line" class="field mt-1.5 py-2.5 text-sm">
+              <option value="all">全部线路类型 (42)</option>
+              <option value="IEPL">IEPL 专线</option>
+              <option value="IPLC">IPLC 专线</option>
+              <option value="BGP/中转">BGP 中转 / 混合隧道</option>
+              <option value="待核实">待核实架构</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-client" class="block text-xs font-bold uppercase tracking-wider text-muted">
+              客户端支持模式
+            </label>
+            <select id="filter-client" class="field mt-1.5 py-2.5 text-sm">
+              <option value="all">全部客户端模式</option>
+              <option value="自研+通用订阅">自研客户端 + 通用订阅</option>
+              <option value="通用订阅">标准通用订阅 (Clash/小火箭)</option>
+              <option value="仅专属客户端">仅限官方专属客户端</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-status" class="block text-xs font-bold uppercase tracking-wider text-muted">
+              测速数据状态
+            </label>
+            <select id="filter-status" class="field mt-1.5 py-2.5 text-sm">
+              <option value="all">全部数据状态 (42)</option>
+              <option value="measured">含 2026-08-11 原始测速图 (16)</option>
+              <option value="historical">历史实测归档</option>
+              <option value="unverified">待核实样本</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-sort" class="block text-xs font-bold uppercase tracking-wider text-muted">
+              排序方式
+            </label>
+            <select id="filter-sort" class="field mt-1.5 py-2.5 text-sm">
+              <option value="rank-asc">按综合推荐排名 (#1 → #42)</option>
+              <option value="price-asc">按月均门槛从低到高 (¥)</option>
+              <option value="price-desc">按月均门槛从高到低 (¥)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4 text-xs text-muted">
+          <span id="filter-count-label" class="font-semibold text-ink">
+            当前显示全部 42 家机场品牌
+          </span>
+          <button
+            type="button"
+            id="filter-reset-btn"
+            class="font-semibold text-accent-ink hover:underline cursor-pointer"
+          >
+            重置全部筛选条件
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        id="brands-empty-state"
+        hidden
+        class="mt-8 rounded-2xl border border-line bg-surface p-12 text-center"
+      >
+        <p class="text-lg font-bold text-ink">未找到符合当前筛选条件的机场品牌</p>
+        <p class="mt-2 text-sm text-muted">
+          请尝试清空搜索词或将下拉筛选框切换回「全部」。
+        </p>
+      </div>
+
+      <!-- 42 Brand Cards Grid -->
+      <div id="brands-grid" class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {ALL_BRANDS.map((brand) => {
+          const stMeta = getSpeedtestStatusMeta(brand.speedtest.status);
+          const topNode = brand.speedtest.nodes[0];
+          const searchBlob = [
+            brand.name,
+            brand.slug,
+            brand.lineType,
+            brand.protocols.join(" "),
+            brand.nodeRegions.join(" "),
+            brand.summary,
+            brand.coreFeatures.join(" "),
+            brand.couponCode || "",
+          ]
+            .join(" ")
+            .toLowerCase();
+
+          return (
+            <article
+              class:list={[
+                "brand-card card flex flex-col justify-between p-6 transition hover:shadow-lg",
+                brand.rank === 1 && "ring-2 ring-accent",
+              ]}
+              data-brand-card
+              data-rank={brand.rank}
+              data-price={brand.monthlyPriceNum}
+              data-line={brand.lineFilter}
+              data-client={brand.clientSupport}
+              data-status={brand.speedtest.status}
+              data-search={searchBlob}
+            >
+              <div>
+                <!-- Card Top Meta -->
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span
+                      class:list={[
+                        "inline-flex shrink-0 items-center rounded-md px-2.5 py-0.5 font-mono text-xs font-extrabold whitespace-nowrap",
+                        brand.rank === 1
+                          ? "bg-accent text-accent-text"
+                          : brand.rank <= 10
+                            ? "bg-ink text-bg"
+                            : "bg-surface text-ink border border-line",
+                      ]}
+                    >
+                      #{brand.rank}
+                    </span>
+                    {brand.badge && (
+                      <span class="truncate rounded bg-accent-soft px-2 py-0.5 text-xs font-bold text-accent-ink whitespace-nowrap">
+                        {brand.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  <span
+                    class="shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold"
+                    style={`background:${stMeta.bg};color:${stMeta.color};border:1px solid ${stMeta.border}`}
+                  >
+                    {stMeta.shortLabel}
+                  </span>
+                </div>
+
+                <!-- Title & Price -->
+                <div class="mt-4 flex items-baseline justify-between gap-3">
+                  <h2 class="text-xl font-extrabold tracking-tight truncate">
+                    <a href={`/brands/${brand.slug}/`} class="hover:text-accent-ink">
+                      {brand.name}
+                    </a>
+                  </h2>
+                  <span class="shrink-0 whitespace-nowrap font-mono text-base font-extrabold text-accent-ink">
+                    {brand.entryPriceLabel}
+                  </span>
+                </div>
+
+                <p class="mt-2.5 line-clamp-3 text-sm leading-relaxed text-muted">
+                  {brand.summary}
+                </p>
+
+                <!-- Key Specs Grid -->
+                <dl class="mt-4 grid grid-cols-2 gap-2 rounded-xl bg-surface p-3 text-xs">
+                  <div>
+                    <dt class="text-muted">线路架构</dt>
+                    <dd class="mt-0.5 font-semibold text-ink truncate">{brand.lineType}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-muted">协议支持</dt>
+                    <dd class="mt-0.5 font-mono font-semibold text-ink truncate">
+                      {brand.protocols.join(" / ")}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-muted">客户端模式</dt>
+                    <dd class="mt-0.5 font-semibold text-ink truncate">{brand.clientSupport}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-muted">代表节点速率</dt>
+                    <dd class="mt-0.5 font-mono font-semibold text-ink truncate">
+                      {topNode ? `${topNode.region} ${topNode.download}` : "待核实"}
+                    </dd>
+                  </div>
+                </dl>
+
+                {brand.couponCode && (
+                  <div class="mt-3 flex items-center justify-between rounded-lg border border-dashed border-accent/50 bg-accent-soft/40 px-3 py-1.5 text-xs">
+                    <span class="font-medium text-ink">
+                      优惠码：<strong class="font-mono text-accent-ink">{brand.couponCode}</strong>
+                    </span>
+                    <span class="text-[11px] text-muted truncate max-w-[160px]">{brand.couponNote}</span>
+                  </div>
+                )}
+              </div>
+
+              <!-- Card Footer Actions -->
+              <div class="mt-5 border-t border-line pt-4">
+                <div class="flex items-center gap-2">
+                  <a
+                    href={`/brands/${brand.slug}/`}
+                    class="btn btn-secondary flex-1 py-2.5 text-xs font-bold"
+                  >
+                    查看评测与测速图 <Icon name="arrow-right" size={14} />
+                  </a>
+                  {brand.registerUrl && (
+                    <a
+                      href={brand.registerUrl}
+                      target="_blank"
+                      rel="nofollow sponsored noopener"
+                      class="btn btn-primary py-2.5 px-3.5 text-xs font-bold"
+                      title={`前往 ${brand.name} 官网（推广链接）`}
+                    >
+                      官网 ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <QuoteSection />
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById("filter-search") as HTMLInputElement | null;
+  const lineSelect = document.getElementById("filter-line") as HTMLSelectElement | null;
+  const clientSelect = document.getElementById("filter-client") as HTMLSelectElement | null;
+  const statusSelect = document.getElementById("filter-status") as HTMLSelectElement | null;
+  const sortSelect = document.getElementById("filter-sort") as HTMLSelectElement | null;
+  const resetBtn = document.getElementById("filter-reset-btn");
+  const countLabel = document.getElementById("filter-count-label");
+  const emptyState = document.getElementById("brands-empty-state");
+  const grid = document.getElementById("brands-grid");
+
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-brand-card]"));
+
+  function applyFilters() {
+    if (!grid) return;
+    const q = (searchInput?.value || "").trim().toLowerCase();
+    const lineVal = lineSelect?.value || "all";
+    const clientVal = clientSelect?.value || "all";
+    const statusVal = statusSelect?.value || "all";
+    const sortVal = sortSelect?.value || "rank-asc";
+
+    let visibleCount = 0;
+
+    for (const card of cards) {
+      const searchStr = card.dataset.search || "";
+      const cLine = card.dataset.line || "";
+      const cClient = card.dataset.client || "";
+      const cStatus = card.dataset.status || "";
+
+      const matchQ = !q || searchStr.includes(q);
+      const matchLine = lineVal === "all" || cLine === lineVal;
+      const matchClient = clientVal === "all" || cClient === clientVal;
+      const matchStatus = statusVal === "all" || cStatus === statusVal;
+
+      const show = matchQ && matchLine && matchClient && matchStatus;
+      card.hidden = !show;
+      if (show) visibleCount++;
+    }
+
+    const sorted = [...cards].sort((a, b) => {
+      const rankA = Number(a.dataset.rank || 999);
+      const rankB = Number(b.dataset.rank || 999);
+      const priceA = Number(a.dataset.price || 999);
+      const priceB = Number(b.dataset.price || 999);
+
+      if (sortVal === "price-asc") return priceA - priceB || rankA - rankB;
+      if (sortVal === "price-desc") return priceB - priceA || rankA - rankB;
+      return rankA - rankB;
+    });
+
+    for (const c of sorted) {
+      grid.appendChild(c);
+    }
+
+    if (countLabel) {
+      countLabel.textContent = `当前筛选匹配 ${visibleCount} / ${cards.length} 家机场品牌`;
+    }
+    if (emptyState) {
+      emptyState.hidden = visibleCount > 0;
+    }
+  }
+
+  searchInput?.addEventListener("input", applyFilters);
+  lineSelect?.addEventListener("change", applyFilters);
+  clientSelect?.addEventListener("change", applyFilters);
+  statusSelect?.addEventListener("change", applyFilters);
+  sortSelect?.addEventListener("change", applyFilters);
+
+  resetBtn?.addEventListener("click", () => {
+    if (searchInput) searchInput.value = "";
+    if (lineSelect) lineSelect.value = "all";
+    if (clientSelect) clientSelect.value = "all";
+    if (statusSelect) statusSelect.value = "all";
+    if (sortSelect) sortSelect.value = "rank-asc";
+    applyFilters();
+  });
+</script>

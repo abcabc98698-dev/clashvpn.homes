@@ -1,18 +1,16 @@
 {
-  "name": "craftline-astro-theme",
+  "name": "clashvpn-homes",
   "type": "module",
   "version": "1.0.0",
-  "description": "Craftline: a fast, accessible Astro theme for local service businesses (plumbers, electricians, cleaners, contractors) with a working quote form.",
+  "description": "Fast, accessible Astro 7 static website for clashvpn.homes.",
   "license": "MIT",
   "keywords": [
     "astro",
-    "astro-theme",
-    "astro-template",
     "tailwindcss",
-    "local-business",
-    "plumber",
-    "contractor",
-    "landing-page"
+    "clash",
+    "iepl",
+    "network-observatory",
+    "seo"
   ],
   "engines": {
     "node": ">=22.12.0"
@@ -37,12 +35,5 @@
   },
   "allowScripts": {
     "esbuild": true
-  },
-  "cloudflare": {
-    "bindings": {
-      "PUBLIC_FORMGONG_ACCESS_KEY": {
-        "description": "Your Formgong access key (fk_…). Create a free form at https://formgong.com/new"
-      }
-    }
   }
 }

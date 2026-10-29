@@ -12,13 +12,13 @@ const { title, lead, crumbs = [] } = Astro.props;
 ---
 
 <section class="border-b border-line">
-  <div class="container-x pt-10 pb-14 sm:pt-14 sm:pb-20">
+  <div class="container-x pt-10 pb-12 sm:pt-12 sm:pb-16">
     {
       crumbs.length > 0 && (
-        <nav aria-label="Breadcrumb">
+        <nav aria-label="面包屑导航">
           <ol class="flex flex-wrap items-center gap-1.5 text-sm text-muted">
             <li>
-              <a href="/" class="rounded hover:text-ink">Home</a>
+              <a href="/" class="rounded hover:text-ink">首页</a>
             </li>
             {crumbs.map((c) => (
               <li class="flex items-center gap-1.5">
@@ -34,10 +34,10 @@ const { title, lead, crumbs = [] } = Astro.props;
         </nav>
       )
     }
-    <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-      <div class="max-w-3xl">
-        <h1 class="h-display text-[clamp(2.5rem,1.6rem+3.2vw,4.25rem)]"><Highlight text={title} /></h1>
-        {lead && <p class="lead mt-6">{lead}</p>}
+    <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div class="max-w-4xl">
+        <h1 class="h-display"><Highlight text={title} /></h1>
+        {lead && <p class="lead mt-5">{lead}</p>}
       </div>
       <slot />
     </div>

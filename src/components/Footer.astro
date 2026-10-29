@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import { SITE } from "../config";
+import { TOP10_BRANDS, DATA_DISCLAIMER } from "../data/brands";
 import Icon from "./Icon.astro";
 import Logo from "./Logo.astro";
 
@@ -16,23 +17,28 @@ const year = new Date().getFullYear();
         <Logo />
         <span class="text-lg leading-tight font-extrabold tracking-tight">{SITE.name}</span>
       </a>
-      <p class="mt-6 max-w-sm text-muted">{SITE.description}</p>
-      <ul class="mt-6 flex gap-2">
-        {
-          SITE.social.map((s) => (
-            <li>
-              <a href={s.href} class="social-link" rel="noopener" target="_blank">
-                <Icon name={s.icon} label={s.label} size={20} />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <p class="mt-5 max-w-sm text-sm leading-relaxed text-muted">{SITE.description}</p>
+      <p class="mt-4 max-w-sm text-xs leading-relaxed text-muted opacity-85">
+        {DATA_DISCLAIMER}
+      </p>
+      {
+        SITE.social.length > 0 && (
+          <ul class="mt-6 flex gap-2">
+            {SITE.social.map((s) => (
+              <li>
+                <a href={s.href} class="social-link" rel="noopener noreferrer" target="_blank">
+                  <Icon name={s.icon} label={s.label} size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
     </div>
 
     <nav aria-labelledby="footer-services" class="lg:col-span-3">
-      <h2 id="footer-services" class="footer-heading">Services</h2>
-      <ul class="mt-5 space-y-3">
+      <h2 id="footer-services" class="footer-heading">场景专题与选型指南</h2>
+      <ul class="mt-5 space-y-2.5 text-sm">
         {
           services.map((s) => (
             <li>
@@ -45,51 +51,60 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
 
-    <nav aria-labelledby="footer-company" class="lg:col-span-2">
-      <h2 id="footer-company" class="footer-heading">Company</h2>
-      <ul class="mt-5 space-y-3">
-        <li><a href="/about/" class="footer-link">About us</a></li>
-        <li><a href="/services/" class="footer-link">All services</a></li>
-        <li><a href="/contact/" class="footer-link">Contact</a></li>
-        <li><a href="/contact/#quote" class="footer-link">Free quote</a></li>
+    <nav aria-labelledby="footer-brands" class="lg:col-span-2">
+      <h2 id="footer-brands" class="footer-heading">热门品牌实测档案</h2>
+      <ul class="mt-5 space-y-2.5 text-sm">
+        {
+          TOP10_BRANDS.slice(0, 6).map((b) => (
+            <li>
+              <a href={`/brands/${b.slug}/`} class="footer-link">
+                #{b.rank} {b.name}评测
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href="/brands/" class="footer-link font-semibold text-accent-ink">
+            查看全部 42 家品牌库 →
+          </a>
+        </li>
       </ul>
     </nav>
 
     <div class="lg:col-span-3">
-      <h2 class="footer-heading">Get in touch</h2>
-      <address class="mt-5 space-y-3 not-italic">
-        <a href={`tel:${SITE.phone.tel}`} class="footer-link flex items-center gap-3">
-          <Icon name="phone" size={18} class="text-accent-ink" />
-          {SITE.phone.display}
-        </a>
+      <h2 class="footer-heading">万字专题与数据观测中心</h2>
+      <ul class="mt-5 space-y-2.5 text-sm">
+        <li><a href="/free-resources/" class="footer-link font-semibold text-ink">免费资源与开源规则集导航</a></li>
+        <li><a href="/faq-wiki/" class="footer-link font-semibold text-ink">机场百科与 65+ 深度技术 FAQ</a></li>
+        <li><a href="/runaway-watch/" class="footer-link font-semibold text-accent-ink">机场跑路预警与防失联监测台</a></li>
+        <li><a href="/clients/" class="footer-link">6大平台第三方代理客户端大全</a></li>
+        <li><a href="/about/" class="footer-link">实测方法论与数据状态标准</a></li>
+      </ul>
+      <address class="mt-6 space-y-2.5 text-sm not-italic border-t border-line pt-5">
         <a href={`mailto:${SITE.email}`} class="footer-link flex items-center gap-3">
           <Icon name="mail" size={18} class="text-accent-ink" />
           {SITE.email}
         </a>
         <p class="flex gap-3 text-muted">
           <Icon name="map-pin" size={18} class="mt-0.5 shrink-0 text-accent-ink" />
-          <span>{address.street}<br />{address.city}, {address.region} {address.postalCode}</span>
+          <span>{address.street}<br />{address.city} · {address.region}</span>
         </p>
       </address>
-      <dl class="mt-6 space-y-1.5 text-sm">
-        {
-          SITE.hours.map((h) => (
-            <div class="flex justify-between gap-4">
-              <dt class="text-muted">{h.label}</dt>
-              <dd class="font-semibold">{h.opens && h.closes ? `${h.opens} – ${h.closes}` : "Closed"}</dd>
-            </div>
-          ))
-        }
-      </dl>
     </div>
   </div>
 
   <div class="border-t border-line">
     <div class="container-x flex flex-col gap-3 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-      <p>&copy; {year} {SITE.name}. Demo business: names, figures and reviews are samples.</p>
-      <p>
-        Built with the Craftline theme for Astro. Forms by <a href="https://formgong.com" class="footer-link underline underline-offset-4">Formgong</a>.
-      </p>
+      <p>&copy; {year} {SITE.name}. 保留所有权利。档案编号 {SITE.trust.license}。</p>
+      <ul class="flex flex-wrap items-center gap-5">
+        <li><a href="/brands/" class="footer-link">42家品牌库</a></li>
+        <li><a href="/free-resources/" class="footer-link">免费资源</a></li>
+        <li><a href="/faq-wiki/" class="footer-link">机场FAQ</a></li>
+        <li><a href="/runaway-watch/" class="footer-link">跑路预警</a></li>
+        <li><a href="/clients/" class="footer-link">客户端大全</a></li>
+        <li><a href="/about/" class="footer-link">评测标准</a></li>
+        <li><a href="/sitemap.xml" class="footer-link">站点地图</a></li>
+      </ul>
     </div>
   </div>
 </footer>

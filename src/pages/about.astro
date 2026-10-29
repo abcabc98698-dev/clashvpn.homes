@@ -5,45 +5,64 @@ import VanIllustration from "../components/illustrations/VanIllustration.astro";
 import Stats from "../components/sections/Stats.astro";
 import QuoteSection from "../components/sections/QuoteSection.astro";
 import { SITE } from "../config";
+import { ALL_BRANDS, AFFILIATE_DISCLOSURE, DATA_DISCLAIMER } from "../data/brands";
+import { webPageJsonLd } from "../lib/schema";
+
+const site = Astro.site ?? new URL(SITE.url);
+const crumbs = [{ label: "评测标准" }];
+const measuredBrands = ALL_BRANDS.filter((b) => b.speedtest.status === "measured");
+const pageTitle = "评测方法论、2026-08-11 原始测速档案说明与数据状态标准";
+const pageDesc = `${SITE.name} 评测标准说明：了解我们如何对 42 家 Clash 与专线机场进行节点延迟测速、流媒体/AI 解锁核验与四级数据可信度标注。`;
+const extraJsonLd = [
+  webPageJsonLd(site, {
+    name: pageTitle,
+    description: pageDesc,
+    urlPath: "/about/",
+    type: "AboutPage",
+  }),
+];
 
 const habits = [
   {
-    title: "Covers on, then tools out",
-    text: "Shoe covers and drop cloths go down before the toolbox opens. Old pipe, packaging and replaced parts leave with us.",
+    title: "原始测速图零涂改留档（Measured Data）",
+    text: "核心榜单中 16 家品牌的测速截图均来自 2026-08-11 真实拓扑测速工具采样，完整保留测试时间戳、节点名称、单线程/多线程吞吐量与 RTT 延迟，绝不裁剪或伪造跑分。",
   },
   {
-    title: "Photos of the fault and the fix",
-    text: "We photograph what failed and the finished repair, and attach both to the invoice. Useful for insurers and the next owner of the house.",
+    title: "四级数据状态严格隔离（Status Isolation）",
+    text: "我们将全站数据明确划分为「2026-08-11 实测归档」「历史实测归档」「品牌资料显示（Vendor Data）」与「待核实（Pending Verification）」，任何未经实测核验的参数均如实标注待核实。",
   },
   {
-    title: "The price doesn't move",
-    text: "If a job takes longer than we planned, that's on us. The written price only changes if you approve extra work.",
+    title: "推广合规披露与防跑路预警（Risk & Disclosure）",
+    text: "所有含佣金的注册链接均统一添加 rel=\"nofollow sponsored noopener\" 并显著标注推广说明；同时在每家品牌档案页醒目提示月付试水与主力+备用双保险原则。",
   },
 ];
 ---
 
 <BaseLayout
-  title="About us"
-  description={`${SITE.name}: licensed, insured plumbers and heating engineers working in ${SITE.address.city} for ${SITE.trust.years} years.`}
+  title={pageTitle}
+  description={pageDesc}
+  crumbs={crumbs}
+  extraJsonLd={extraJsonLd}
 >
   <PageHeader
-    title={`Plumbers in ${SITE.address.city} *since 2001*`}
-    lead="Eleven licensed plumbers, eight vans and an office on Copperline Road. A dispatcher answers the phone day and night, and every van carries the parts for the twenty most common repairs."
-    crumbs={[{ label: "About" }]}
+    title="可观测性评测标准与 *数据可信度准则*"
+    lead="拒绝千篇一律的软文吹捧与凭空捏造的测速跑分。我们将网络监控台的透明标准引入机场订阅评测，让每一分预算都有据可查。"
+    crumbs={crumbs}
   />
 
   <section class="section overflow-x-clip">
     <div class="container-x grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
       <div class="reveal order-2 lg:order-1">
-        <h2 class="h-section">Two apprentices and a <span class="hl">secondhand van</span></h2>
+        <h2 class="h-section">为什么我们需要一套 <span class="hl">不撒谎的评测档案</span></h2>
         <div class="prose-craft mt-6">
           <p>
-            We started in 2001 with one van and a phone on a kitchen table. Most early jobs came from neighbors who heard
-            we'd turned up on a Sunday night for a burst pipe and charged the same as a Tuesday.
+            在跨境网络与 Clash 订阅领域，用户在搜索「便宜机场推荐」或某家机场名字时，往往只能看到夸张的“万兆秒开、永不掉线”宣传词，却看不到测试日期、看不到测试协议，甚至把厂商宣传口号当成了实测结论。
           </p>
           <p>
-            We still train our own apprentices and don't use subcontractors, so the plumber at your door has worked with us
-            for years. The weekend rate is still the weekday rate, and that includes emergency call-outs at night.
+            因此，<strong>{SITE.name}</strong> 建立了涵盖全网 <strong>42 家机场品牌</strong> 的结构化观测档案库：对前 28 家核心在营品牌（其中 16 家留存有 <strong>2026-08-11 原始未修改测速截图</strong>）与 14 家早期历史归档品牌进行分层管理，明确区分实测事实与厂商宣称信息。
+          </p>
+          <p class="text-sm text-muted">
+            {DATA_DISCLAIMER}
           </p>
         </div>
       </div>
@@ -55,7 +74,9 @@ const habits = [
 
   <section class="border-t border-line bg-surface py-20 sm:py-24" aria-labelledby="habits-title">
     <div class="container-x">
-      <h2 id="habits-title" class="h-section reveal max-w-2xl text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)]">On <span class="hl">every</span> job</h2>
+      <h2 id="habits-title" class="h-section reveal max-w-2xl text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)]">
+        每一篇评测遵循的 <span class="hl">三条铁律</span>
+      </h2>
       <ol class="stagger mt-12 grid gap-10 md:grid-cols-3 md:gap-12">
         {
           habits.map((h, i) => (
@@ -66,6 +87,42 @@ const habits = [
           ))
         }
       </ol>
+    </div>
+  </section>
+
+  <!-- 16 Measured Speedtest Archive Index -->
+  <section class="section border-t border-line" aria-labelledby="archive-title">
+    <div class="container-x">
+      <h2 id="archive-title" class="h-section text-2xl sm:text-3xl">
+        2026-08-11 原始测速图归档核验清单（共 {measuredBrands.length} 家）
+      </h2>
+      <p class="mt-3 max-w-3xl text-sm text-muted">
+        以下品牌在详情页内均附有 2026 年 8 月 11 日采样的原始 PNG 测速实测图，点击即可查阅对应品牌的节点吞吐量与协议详情：
+      </p>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {measuredBrands.map((b) => (
+          <a
+            href={`/brands/${b.slug}/`}
+            class="card flex items-center justify-between p-4 transition hover:border-accent"
+          >
+            <div>
+              <div class="font-mono text-xs text-muted">
+                #{b.rank} · {b.speedtest.imageTestedAt || "2026-08-11"}
+              </div>
+              <div class="mt-0.5 font-extrabold text-ink">{b.name}</div>
+              <div class="mt-0.5 font-mono text-xs text-accent-ink">
+                {b.speedtest.nodes[0]?.region} {b.speedtest.nodes[0]?.download}
+              </div>
+            </div>
+            <span class="font-mono text-xs font-bold text-accent-ink">查看原图 →</span>
+          </a>
+        ))}
+      </div>
+
+      <p class="mt-6 text-xs text-muted">
+        合规声明：{AFFILIATE_DISCLOSURE}。
+      </p>
     </div>
   </section>
 
